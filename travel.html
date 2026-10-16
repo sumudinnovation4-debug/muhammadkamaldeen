@@ -1,0 +1,473 @@
+<title>Kora Voyages</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600&family=Young+Serif&display=swap">
+<style>
+/* Layout concept: a travel desk with a sunset palette. Deep ocean ink, white paper, coral for the call to action.
+   Destinations are painted as layered landscapes in code. Search, cost estimator and enquiry all work. */
+:root{
+  --bg:#f7f4ee; --surface:#ffffff; --surface2:#eaf1f2; --ink:#0c2a36; --muted:#56707a;
+  --ocean:#0f5c73; --ocean-fg:#ffffff; --coral:#ff6b4a; --coral-fg:#ffffff; --sand:#f3d9a4; --line:#d8e0e0; --ok:#12805c; --bad:#c43c2c;
+  --disp:'Young Serif',Georgia,serif; --body:'Outfit','Helvetica Neue',Arial,sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.55 var(--body);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:60}
+.wrap{max-width:1080px;margin:0 auto}
+h1,h2,h3{font-family:var(--disp);font-weight:400;line-height:1.08;margin:0;text-wrap:balance}
+h1{font-size:clamp(2.6rem,9vw,4.8rem)} h2{font-size:clamp(1.9rem,6vw,2.9rem)} h3{font-size:1.3rem}
+p{margin:0;max-width:62ch}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--coral);outline-offset:3px}
+.eyebrow{font:600 .78rem/1 var(--body);letter-spacing:.18em;text-transform:uppercase;color:var(--coral)}
+.muted{color:var(--muted)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;background:var(--coral);color:var(--coral-fg);border:2px solid var(--coral);padding:.8rem 1.5rem;border-radius:999px;font-weight:600;text-decoration:none}
+.btn.ocean{background:var(--ocean);border-color:var(--ocean)}
+.btn.ghost{background:none;color:var(--ink);border-color:var(--line)}
+.btn.ghost:hover{border-color:var(--ocean)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:color-mix(in srgb,var(--bg) 93%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);
+  margin:0 calc(-1*max(16px,env(safe-area-inset-left,0px)));padding:.65rem max(16px,env(safe-area-inset-right,0px)) .65rem max(16px,env(safe-area-inset-left,0px))}
+.bar .wrap{display:flex;align-items:center;gap:.7rem}
+.brand{margin-right:auto;background:none;border:0;padding:0;display:flex;align-items:center;gap:.5rem;font:400 1.4rem/1 var(--disp)}
+.brand svg{width:34px;height:34px;flex:none}
+.savedbtn{position:relative;width:44px;height:44px;border:1px solid var(--line);background:var(--surface);border-radius:50%;display:grid;place-content:center}
+.savedbtn .n{position:absolute;top:-4px;right:-4px;min-width:20px;height:20px;border-radius:10px;background:var(--coral);color:#fff;font-size:.75rem;font-weight:600;display:grid;place-content:center;padding:0 5px}
+.burger{width:44px;height:44px;border:1px solid var(--line);background:var(--surface);border-radius:50%;display:grid;place-content:center;gap:5px}
+.burger i{display:block;width:18px;height:2px;background:var(--ink);transition:transform .25s,opacity .25s}
+.burger[aria-expanded="true"] i:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.burger[aria-expanded="true"] i:nth-child(2){opacity:0}
+.burger[aria-expanded="true"] i:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+.scrim{position:fixed;inset:0;background:rgba(5,25,32,.55);z-index:70}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(86vw,340px);z-index:80;background:var(--ocean);color:#fff;
+  padding:calc(env(safe-area-inset-top,0px) + 1.2rem) max(22px,env(safe-area-inset-right,0px)) calc(env(safe-area-inset-bottom,0px) + 1.2rem) 24px;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .28s ease;visibility:hidden}
+.drawer.open{transform:none;visibility:visible}
+.drawer a{padding:.75rem 0;border-bottom:1px solid rgba(255,255,255,.18);font:400 1.7rem/1.1 var(--disp);color:#fff;text-decoration:none}
+.drawer a[aria-current="page"]{color:var(--sand)}
+.drawer .small{margin-top:auto;color:#b8d6dd;font-size:.9rem}
+
+.page{padding-block:2rem 3rem;animation:in .35s ease both}
+@keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.page{animation:none}.drawer{transition:none}html{scroll-behavior:auto}}
+.sec{margin-top:3rem;display:grid;gap:1.3rem}
+.sec>header{display:grid;gap:.6rem}
+.top{margin-top:0}.top h1{font-size:clamp(2.3rem,8vw,3.8rem)}
+
+.hero{display:grid;gap:1.6rem}
+.heroBox{position:relative;border-radius:26px;overflow:hidden;min-height:420px;display:grid;align-items:end;color:#fff}
+.heroBox>svg{position:absolute;inset:0;width:100%;height:100%}
+.heroBox .in{position:relative;padding:1.6rem;display:grid;gap:1rem;background:linear-gradient(transparent,rgba(5,25,32,.78) 55%)}
+.heroBox h1{max-width:14ch}
+.heroBox p{max-width:46ch;color:#e6f1f3}
+.finder{display:grid;gap:.7rem;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr));background:var(--surface);color:var(--ink);padding:.9rem;border-radius:18px;align-items:end}
+.finder label{font-size:.78rem}
+.finder .btn{height:100%;min-height:46px}
+input,select,textarea{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:.7rem .8rem;width:100%;min-width:0}
+textarea{min-height:90px;resize:vertical}
+label{display:grid;gap:.3rem;font-weight:500;font-size:.9rem}
+form{display:grid;gap:1rem}
+.two{display:grid;gap:1rem;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr))}
+.err{color:var(--bad);font-size:.85rem;min-height:1.1em}
+.perks{display:grid;gap:1px;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));background:var(--line);border:1px solid var(--line);border-radius:18px;overflow:hidden}
+.perks div{background:var(--surface);padding:1rem 1.1rem;display:grid;gap:.2rem}
+.perks b{font:400 1.1rem var(--disp)}
+.perks span{color:var(--muted);font-size:.9rem}
+
+.grid{display:grid;gap:1rem;grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr))}
+.card{background:var(--surface);border-radius:22px;overflow:hidden;display:grid;align-content:start;border:1px solid var(--line)}
+.card .art{position:relative;aspect-ratio:4/3}
+.card .art svg{display:block;width:100%;height:100%}
+.heart{position:absolute;top:.7rem;right:.7rem;width:40px;height:40px;border-radius:50%;border:0;background:rgba(255,255,255,.92);display:grid;place-content:center;color:var(--ink)}
+.heart[aria-pressed="true"]{color:var(--coral)}
+.chip{position:absolute;left:.7rem;top:.7rem;background:rgba(12,42,54,.78);color:#fff;font-size:.75rem;font-weight:600;letter-spacing:.06em;padding:.25rem .65rem;border-radius:999px}
+.card .body{padding:1rem 1.1rem 1.2rem;display:grid;gap:.5rem}
+.card .row{display:flex;justify-content:space-between;align-items:baseline;gap:.6rem}
+.from{color:var(--muted);font-size:.8rem}
+.price{font:400 1.35rem var(--disp);color:var(--ocean)}
+.tags{display:flex;gap:.35rem;flex-wrap:wrap}
+.tg{font-size:.75rem;background:var(--surface2);padding:.15rem .6rem;border-radius:999px;color:var(--ocean);font-weight:500}
+.tabs{display:flex;gap:.45rem;overflow-x:auto;padding-bottom:.3rem}
+.tab{flex:none;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:.45rem 1rem;font-weight:500}
+.tab[aria-pressed="true"]{background:var(--ocean);color:#fff;border-color:var(--ocean)}
+.filters{display:grid;gap:.8rem}
+.rowf{display:grid;gap:.8rem;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr))}
+
+.layout{display:grid;gap:1.4rem}
+@media(min-width:900px){.layout{grid-template-columns:1fr 380px;align-items:start}}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:1.3rem;display:grid;gap:1rem;align-content:start}
+.est{background:var(--ocean);color:#fff;border-radius:22px;padding:1.3rem;display:grid;gap:.9rem;align-content:start}
+@media(min-width:900px){.est{position:sticky;top:calc(env(safe-area-inset-top,0px) + 80px)}}
+.est .big{font:400 2.6rem/1 var(--disp);color:var(--sand)}
+.est table{border-collapse:collapse;width:100%}
+.est td{padding:.4rem 0;border-bottom:1px solid rgba(255,255,255,.16);font-size:.95rem}
+.est td:last-child{text-align:right}
+.stack{display:flex;height:14px;border-radius:7px;overflow:hidden;background:rgba(255,255,255,.15)}
+.stack i{display:block;height:100%}
+.legend{display:flex;gap:.8rem;flex-wrap:wrap;font-size:.8rem;color:#cfe4e8}
+.legend span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:3px;background:var(--c);margin-right:.35rem}
+.stepper{display:flex;align-items:center;gap:.8rem}
+.qty{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:999px;overflow:hidden;background:var(--bg)}
+.qty button{width:40px;height:40px;background:none;border:0;font-size:1.2rem}
+.qty span{min-width:36px;text-align:center;font-weight:600}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--bg)}
+.seg button{border:0;background:none;padding:.65rem .3rem;font-weight:500;font-size:.9rem}
+.seg button[aria-pressed="true"]{background:var(--ocean);color:#fff}
+details{border-bottom:1px solid var(--line);padding:1rem 0}
+summary{cursor:pointer;font-weight:600;list-style:none;display:flex;justify-content:space-between;gap:1rem}
+summary::after{content:"+";color:var(--coral);font-size:1.3rem;line-height:1}
+details[open] summary::after{content:"–"}
+details p{margin-top:.6rem;color:var(--muted)}
+.deal{display:grid;gap:1rem;border-radius:22px;overflow:hidden;background:var(--surface);border:1px solid var(--line)}
+@media(min-width:760px){.deal{grid-template-columns:1fr 1fr}}
+.deal .art{min-height:220px;position:relative}
+.deal .art svg{position:absolute;inset:0;width:100%;height:100%}
+.deal .in{padding:1.4rem;display:grid;gap:.7rem;align-content:center}
+.strike{text-decoration:line-through;color:var(--muted)}
+.confirm{background:var(--surface);border:2px solid var(--ocean);border-radius:22px;padding:1.5rem;display:grid;gap:.7rem}
+.ref{font:400 2rem var(--disp);color:var(--coral)}
+.copy-row{display:flex;gap:.6rem;align-items:center;flex-wrap:wrap}
+.contact{display:grid;gap:1.2rem}
+@media(min-width:820px){.contact{grid-template-columns:1fr 1fr}}
+table.hrs{border-collapse:collapse;width:100%}
+.hrs td{padding:.5rem 0;border-bottom:1px solid var(--line)}
+.hrs td:last-child{text-align:right}
+.hrs tr.today td{color:var(--ocean);font-weight:600}
+footer{border-top:1px solid var(--line);padding-block:1.4rem 2.4rem;color:var(--muted);font-size:.9rem}
+.toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 18px);transform:translateX(-50%);background:var(--ink);color:#fff;padding:.7rem 1.1rem;border-radius:999px;font-weight:500;z-index:90;max-width:90vw}
+.photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.heroBox>.photo{z-index:0}.heroBox .in{z-index:1}
+.quote{margin:0;background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:1.3rem;display:grid;gap:.6rem}
+.quote small{color:var(--muted)}.stars{color:var(--coral);letter-spacing:.15em}
+.best{font-size:.82rem;color:var(--muted)}
+.alert{background:var(--ocean);color:#fff;border-radius:22px;padding:1.4rem;display:grid;gap:.8rem}
+.alert input{background:#fff}
+.alert .row2{display:flex;gap:.6rem;flex-wrap:wrap}.alert .row2 input{flex:1;min-width:200px}
+</style>
+
+<header class="bar"><div class="wrap">
+  <button class="brand" data-go="home" aria-label="Kora Voyages, home">
+    <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="19" fill="#0f5c73"/><circle cx="20" cy="20" r="9" fill="#ff6b4a"/><path d="M2 26 Q11 18 20 26 T38 26 V40 H2Z" fill="#f3d9a4" opacity=".95"/></svg>
+    Kora Voyages
+  </button>
+  <button class="savedbtn" data-go="destinations" data-saved="1" aria-label="Saved trips"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-4.4-9.3-9A5.2 5.2 0 0112 6.2 5.2 5.2 0 0121.3 12c-2.3 4.6-9.3 9-9.3 9z"/></svg><span class="n" id="savedN" hidden>0</span></button>
+  <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false" aria-controls="menu"><i></i><i></i><i></i></button>
+</div></header>
+
+<div class="scrim" id="scrim" hidden></div>
+<nav class="drawer" id="menu" aria-label="Main menu">
+  <a href="#home" data-go="home">Home</a>
+  <a href="#destinations" data-go="destinations">Destinations</a>
+  <a href="#planner" data-go="planner">Trip planner</a>
+  <a href="#deals" data-go="deals">Deals</a>
+  <a href="#help" data-go="help">Visa and help</a>
+  <a href="#contact" data-go="contact">Talk to us</a>
+  <p class="small">Licensed agency · Ikeja, Lagos<br>Mon to Sat, 9am to 6pm</p>
+</nav>
+
+<main class="wrap">
+
+<section class="page" data-page="home">
+  <div class="hero">
+    <div class="heroBox" id="heroBox">
+      <div class="in">
+        <span class="eyebrow" style="color:var(--sand)">Flights · Hotels · Visas · Tours</span>
+        <h1>Go somewhere that moves you.</h1>
+        <p>We plan the trip, handle the paperwork and answer the phone when you land. Seen from Lagos, priced in Naira.</p>
+      </div>
+    </div>
+    <form class="finder" id="finder" novalidate aria-label="Find a trip">
+      <label for="fType">Trip style<select id="fType"><option value="All">Anything</option><option>Beach</option><option>City</option><option>Safari</option><option>Culture</option></select></label>
+      <label for="fBudget">Budget per person<select id="fBudget"><option value="0">Any budget</option><option value="800000">Up to ₦800,000</option><option value="1500000">Up to ₦1.5m</option><option value="2500000">Up to ₦2.5m</option></select></label>
+      <label for="fPpl">Travellers<select id="fPpl"><option>1</option><option selected>2</option><option>3</option><option>4</option><option>5</option><option>6</option></select></label>
+      <button class="btn" type="submit">Search trips</button>
+    </form>
+  </div>
+
+  <div class="sec"><div class="perks">
+    <div><b>Visa support</b><span>Checklists and appointment help for 40+ countries</span></div>
+    <div><b>Pay in Naira</b><span>Transfer, card or a 3-part instalment plan</span></div>
+    <div><b>24/7 line</b><span>A real person if your flight changes</span></div>
+    <div><b>Refund promise</b><span>Full refund if we cannot confirm your booking</span></div>
+  </div></div>
+
+  <div class="sec">
+    <header><span class="eyebrow">Popular right now</span><h2>Where Lagos is going</h2></header>
+    <div class="grid" id="popular"></div>
+  </div>
+
+  <div class="sec">
+    <header><span class="eyebrow">Traveller stories</span><h2>Back home and smiling</h2></header>
+    <div class="grid">
+      <figure class="quote"><div class="stars" aria-label="5 stars">★★★★★</div><p>They got our UK visa done in two weeks and found a hotel near the museums. No stress.</p><small>Adaora & Sam · London</small></figure>
+      <figure class="quote"><div class="stars" aria-label="5 stars">★★★★★</div><p>Our Zanzibar honeymoon had a private beach dinner nobody asked for. Lovely surprise.</p><small>Bisola & Tunde · Zanzibar</small></figure>
+      <figure class="quote"><div class="stars" aria-label="5 stars">★★★★★</div><p>The safari driver knew exactly where to find the lions at sunrise. Worth every naira.</p><small>The Okeke family · Maasai Mara</small></figure>
+    </div>
+  </div>
+
+  <div class="sec">
+    <header><span class="eyebrow">How it works</span><h2>Three steps to take off</h2></header>
+    <div class="perks">
+      <div><b>1. Tell us your plan</b><span>Dates, budget and who is travelling</span></div>
+      <div><b>2. We price it properly</b><span>Flights, stay, visa and transfers in one quote</span></div>
+      <div><b>3. Pack and go</b><span>Tickets and vouchers land in your inbox</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="page" data-page="destinations" hidden>
+  <header class="sec top"><span class="eyebrow">Destinations</span><h1>Choose your horizon</h1></header>
+  <div class="sec filters">
+    <div class="tabs" id="regions" role="group" aria-label="Region"></div>
+    <div class="rowf">
+      <label for="dType">Style<select id="dType"><option value="All">Any style</option><option>Beach</option><option>City</option><option>Safari</option><option>Culture</option></select></label>
+      <label for="dBudget">Budget per person<select id="dBudget"><option value="0">Any budget</option><option value="800000">Up to ₦800,000</option><option value="1500000">Up to ₦1.5m</option><option value="2500000">Up to ₦2.5m</option></select></label>
+      <label for="dSort">Sort by<select id="dSort"><option value="pop">Most popular</option><option value="low">Price, low to high</option><option value="high">Price, high to low</option></select></label>
+    </div>
+    <label class="tab" style="display:flex;gap:.6rem;align-items:center;justify-self:start;border-radius:12px"><input type="checkbox" id="onlySaved" style="width:auto"> Show saved only</label>
+  </div>
+  <div class="sec grid" id="destGrid"></div>
+  <p class="muted" id="destEmpty" hidden>No trips match those filters. Widen the budget or choose another style.</p>
+</section>
+
+<section class="page" data-page="planner" hidden>
+  <header class="sec top"><span class="eyebrow">Trip planner</span><h1>What will it cost?</h1><p class="muted">Adjust anything and the estimate updates. Prices are typical for the season and per person unless stated.</p></header>
+  <div class="sec" id="planArea">
+    <div class="layout">
+      <form class="panel" id="planForm" novalidate>
+        <label for="pDest">Destination<select id="pDest"></select></label>
+        <div class="two">
+          <div><div style="font-weight:500;font-size:.9rem;margin-bottom:.3rem">Travellers</div><div class="stepper"><div class="qty"><button type="button" data-step="pp-" aria-label="Fewer travellers">−</button><span id="ppN">2</span><button type="button" data-step="pp+" aria-label="More travellers">+</button></div></div></div>
+          <div><div style="font-weight:500;font-size:.9rem;margin-bottom:.3rem">Nights</div><div class="stepper"><div class="qty"><button type="button" data-step="n-" aria-label="Fewer nights">−</button><span id="nN">5</span><button type="button" data-step="n+" aria-label="More nights">+</button></div></div></div>
+        </div>
+        <div><div style="font-weight:500;font-size:.9rem;margin-bottom:.3rem">Hotel class</div><div class="seg" id="hotel" role="group" aria-label="Hotel class"><button type="button" data-h="0.6" aria-pressed="false">Budget</button><button type="button" data-h="1" aria-pressed="true">Comfort</button><button type="button" data-h="2.2" aria-pressed="false">Luxury</button></div></div>
+        <label class="tab" style="display:flex;gap:.6rem;align-items:center;border-radius:12px"><input type="checkbox" id="pVisa" checked style="width:auto"> Include visa fee and processing</label>
+        <label class="tab" style="display:flex;gap:.6rem;align-items:center;border-radius:12px"><input type="checkbox" id="pIns" checked style="width:auto"> Include travel insurance</label>
+        <label for="pDate">Preferred travel month<input type="month" id="pDate"></label>
+      </form>
+      <aside class="est" aria-live="polite">
+        <div style="opacity:.8">Estimated total</div><div class="big" id="estTotal"></div>
+        <div id="estPer" style="color:#cfe4e8"></div>
+        <div class="stack" id="stack"></div><div class="legend" id="legend"></div>
+        <table id="estTable"></table>
+        <button class="btn" id="toEnquiry">Request this quote</button>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<section class="page" data-page="deals" hidden>
+  <header class="sec top"><span class="eyebrow">Limited offers</span><h1>This month’s deals</h1></header>
+  <div class="sec" id="deals" style="gap:1.2rem"></div>
+  <form class="alert" id="alertForm" novalidate>
+    <h3 style="font-size:1.6rem">Get deal alerts</h3><p style="color:#cfe4e8">One message when a fare drops on a route you follow. No spam.</p>
+    <div class="row2"><input id="aEmail" type="email" placeholder="you@example.com" aria-label="Email address"><button class="btn" type="submit">Notify me</button></div>
+    <div class="err" id="eAlert" style="color:#ffd7cf"></div>
+  </form>
+</section>
+
+<section class="page" data-page="help" hidden>
+  <header class="sec top"><span class="eyebrow">Before you fly</span><h1>Visas and answers</h1></header>
+  <div class="sec" id="faq"></div>
+</section>
+
+<section class="page" data-page="contact" hidden>
+  <header class="sec top"><span class="eyebrow">Talk to us</span><h1>Plan it with a human</h1></header>
+  <div class="sec contact">
+    <form id="enqForm" class="panel" novalidate>
+      <h3>Request a quote</h3>
+      <div id="enqSummary" class="muted" style="font-size:.95rem"></div>
+      <div class="two">
+        <label for="eName">Full name<input id="eName" autocomplete="name"><span class="err" id="eeName"></span></label>
+        <label for="ePhone">Phone<input id="ePhone" type="tel" autocomplete="tel"><span class="err" id="eePhone"></span></label>
+      </div>
+      <label for="eDest">Where to?<select id="eDest"></select></label>
+      <label for="eNote">Anything we should know?<textarea id="eNote" placeholder="Dates, passports, honeymoon, wheelchair access…"></textarea></label>
+      <button class="btn" type="submit">Send enquiry</button>
+    </form>
+    <div style="display:grid;gap:1.1rem;align-content:start">
+      <div class="panel"><h3>Office hours</h3><table class="hrs" id="hours"></table></div>
+      <div class="panel"><h3>Kora Voyages</h3><p>18 Allen Avenue, Ikeja, Lagos <span class="muted">(sample address)</span></p>
+        <div class="copy-row"><span>+234 800 000 0003</span><button class="btn ghost" data-copy="+234 800 000 0003" style="padding:.3rem .9rem">Copy</button></div>
+        <div class="copy-row"><span>hello@koravoyages.example</span><button class="btn ghost" data-copy="hello@koravoyages.example" style="padding:.3rem .9rem">Copy</button></div></div>
+    </div>
+  </div>
+</section>
+
+<footer>© Kora Voyages · Portfolio demo. Destinations, prices and contact details are samples and not a real offer.</footer>
+</main>
+
+<script>
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const fmt=n=>'₦'+Math.round(n).toLocaleString('en-NG');
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let gid=0;
+
+const UNS=id=>`https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=900&q=75`;
+const slot=(name,svg,alt)=>svg+`<img class="photo" src="images/${name}.jpg" ${PHOTOS[name]?`data-fb="${UNS(PHOTOS[name])}"`:''} alt="${esc(alt)}" loading="lazy">`;
+const n2=i=>String(i).padStart(2,'0');
+document.addEventListener('error',e=>{const t=e.target;if(!t||!t.classList||!t.classList.contains('photo'))return;const fb=t.getAttribute('data-fb');if(fb&&t.src.indexOf('unsplash')<0){t.removeAttribute('data-fb');t.src=fb}else t.remove()},true);
+/* Photos: key = slot name, value = Unsplash photo id. A file named images/<key>.jpg overrides it. */
+const PHOTOS={
+ "hero": "1507525428034-b723cf961d3e",
+ "dest-zanzibar": "1575999502951-4ab25b5ca889",
+ "dest-capetown": "1576485375217-d6a95e34d043",
+ "dest-mara": "1518459384564-ecfd8e80721f",
+ "dest-marrakech": "1597212618440-806262de4f6b",
+ "dest-accra": "1568025848823-86404cd04ad1",
+ "dest-dubai": "1512453979798-5ea266f8880c",
+ "dest-cairo": "1568322445389-f64ac2515020",
+ "dest-santorini": "1580502304784-8985b7eb7260",
+ "dest-london": "1533929736458-ca588d08c8be",
+ "dest-bali": "1555400038-63f5ba517a47",
+ "deal-zanzibar": "1621583628955-42fbc37bf424",
+ "deal-dubai": "1518684079-3c830dcef090",
+ "deal-capetown": "1591205024850-d3420e30469e"
+};
+/* ---------- landscapes painted in code ---------- */
+const SKY={day:['#7fd0e6','#e8f6f2'],sun:['#ff9a62','#ffe6b0'],dusk:['#6a4c93','#ffb38a'],desert:['#ffbf7a','#fff0c9'],cool:['#9ec9d9','#f3f7f4']};
+function scene(type,seed=1,w=400,h=300){
+  const id='s'+(++gid);let g='',sky=SKY.day;
+  const rnd=(()=>{let s=seed*7919+13;return()=>((s=(s*16807)%2147483647)/2147483647)})();
+  const wave=(y,col,amp,op=1)=>`<path d="M0 ${y} Q${w*.15} ${y-amp} ${w*.3} ${y} T${w*.6} ${y} T${w*.9} ${y} T${w*1.2} ${y} V${h} H0Z" fill="${col}" opacity="${op}"/>`;
+  const palm=(x,y,s=1)=>`<g transform="translate(${x} ${y}) scale(${s})"><path d="M0 0 Q6 -40 -4 -80" stroke="#6b4a2c" stroke-width="5" fill="none" stroke-linecap="round"/>${[-70,-35,0,35,70].map(a=>`<path d="M-4 -80 q${a*.7} -34 ${a*1.1} 2 q${-a*.5} -14 ${-a*1.1} -2z" fill="#1d7a4a" transform="rotate(${a*.3} -4 -80)"/>`).join('')}</g>`;
+  if(type==='Beach'){sky=SKY.sun;g=`<circle cx="${w*.72}" cy="${h*.36}" r="${h*.13}" fill="#fff3c4"/>`+wave(h*.52,'#2aa6b8',8)+wave(h*.6,'#1b8aa0',10)+wave(h*.68,'#f3d9a4',6)+`<path d="M0 ${h} V${h*.8} Q${w*.5} ${h*.7} ${w} ${h*.82} V${h}Z" fill="#ecc98a"/>`+palm(w*.14,h*.88,1.1)+palm(w*.26,h*.92,.8)+`<g fill="#ff6b4a"><path d="M${w*.6} ${h*.86} l30 0 l-15 -22z"/></g><path d="M${w*.6+15} ${h*.86-22} v-14" stroke="#6b4a2c" stroke-width="3"/>`}
+  if(type==='City'){sky=SKY.dusk;g=`<circle cx="${w*.25}" cy="${h*.3}" r="${h*.1}" fill="#ffe8c2" opacity=".9"/>`+Array.from({length:11},(_,i)=>{const bw=26+rnd()*26,bh=70+rnd()*150,x=i*(w/10.5)-6;return`<rect x="${x}" y="${h-bh-30}" width="${bw}" height="${bh+30}" fill="${i%2?'#2a2250':'#1c173d'}"/>`+Array.from({length:Math.floor(bh/22)},(_,k)=>rnd()>.45?`<rect x="${x+6}" y="${h-bh-20+k*22}" width="5" height="8" fill="#ffd87a"/><rect x="${x+bw-12}" y="${h-bh-20+k*22}" width="5" height="8" fill="#ffd87a" opacity=".7"/>`:'').join('')}).join('')+`<rect y="${h-26}" width="${w}" height="26" fill="#120e2b"/>`+`<path d="M${w*.58} ${h-30} V${h*.18} l8 -14 l8 14 V${h-30}Z" fill="#3a3070"/>`}
+  if(type==='Safari'){sky=SKY.desert;g=`<circle cx="${w*.5}" cy="${h*.5}" r="${h*.2}" fill="#ff8a3d"/>`+wave(h*.62,'#b8632b',6)+wave(h*.72,'#8a4a1f',8)+`<path d="M0 ${h} V${h*.84} Q${w*.5} ${h*.76} ${w} ${h*.86} V${h}Z" fill="#4a2a12"/>`+`<g fill="#2a1608"><path d="M${w*.2} ${h*.64} v-46 M${w*.2-26} ${h*.64-46} h52" stroke="#2a1608" stroke-width="5"/><ellipse cx="${w*.2}" cy="${h*.64-52}" rx="40" ry="12"/></g>`+`<g fill="#2a1608" transform="translate(${w*.62} ${h*.7})"><rect x="0" y="-26" width="44" height="22" rx="8"/><rect x="4" y="-6" width="5" height="22"/><rect x="34" y="-6" width="5" height="22"/><path d="M44 -22 q18 -26 22 -42 l-8 0 q-6 14 -20 24z"/><circle cx="64" cy="-66" r="6"/></g>`}
+  if(type==='Culture'){sky=SKY.desert;g=`<circle cx="${w*.75}" cy="${h*.28}" r="${h*.1}" fill="#fff0c9"/>`+`<path d="M0 ${h} V${h*.78} L${w*.3} ${h*.62} L${w*.5} ${h*.78} L${w*.72} ${h*.5} L${w} ${h*.76} V${h}Z" fill="#d89a52"/>`+`<path d="M${w*.36} ${h} V${h*.62} L${w*.5} ${h*.34} L${w*.64} ${h*.62} V${h}Z" fill="#c07e3c"/>`+`<path d="M${w*.5} ${h*.34} L${w*.64} ${h*.62} V${h} H${w*.5}Z" fill="#a8662c"/>`+`<path d="M0 ${h} V${h*.9} Q${w*.5} ${h*.82} ${w} ${h*.9} V${h}Z" fill="#8a4a1f"/>`+`<path d="M${w*.42} ${h*.9} v-24 a${w*.08} ${w*.08} 0 0 1 ${w*.16} 0 v24z" fill="#2a1608" opacity=".55"/>`}
+  if(type==='Mountain'){sky=SKY.cool;g=`<circle cx="${w*.8}" cy="${h*.25}" r="${h*.09}" fill="#fff"/>`+`<path d="M0 ${h*.7} L${w*.22} ${h*.3} L${w*.4} ${h*.56} L${w*.58} ${h*.22} L${w*.82} ${h*.6} L${w} ${h*.44} V${h} H0Z" fill="#4d7a8c"/>`+`<path d="M${w*.58} ${h*.22} L${w*.5} ${h*.38} L${w*.55} ${h*.34} L${w*.6} ${h*.4} L${w*.66} ${h*.34}Z M${w*.22} ${h*.3} L${w*.16} ${h*.42} L${w*.22} ${h*.38} L${w*.27} ${h*.43}Z" fill="#fff"/>`+wave(h*.74,'#2a7a62',8)+wave(h*.84,'#1d5a48',10)+`<path d="M0 ${h*.9} H${w} V${h} H0Z" fill="#14402f"/>`}
+  return `<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="xMidYMid slice" role="img" aria-label="${esc(type)} landscape illustration"><defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${sky[0]}"/><stop offset="1" stop-color="${sky[1]}"/></linearGradient></defs><rect width="${w}" height="${h}" fill="url(#${id})"/>${g}</svg>`;
+}
+
+/* ---------- data (prices in Naira, per person) ---------- */
+const D=[
+ {id:'zanzibar',n:'Zanzibar',c:'Tanzania',r:'Africa',t:'Beach',s:'Beach',flight:620000,hotel:70000,daily:35000,visa:75000,best:'Jun–Oct, Dec–Feb',pop:9,nights:'5 to 7',tags:['Snorkelling','Stone Town','Spice farms'],note:'Powder-white sand and warm water, 8 hours from Lagos with one stop.'},
+ {id:'capetown',n:'Cape Town',c:'South Africa',r:'Africa',t:'City',s:'Mountain',flight:540000,hotel:85000,daily:40000,visa:0,best:'Nov–Mar',pop:8,nights:'5 to 8',tags:['Table Mountain','Wine estates','Penguins'],note:'Mountains, vineyards and coastline in one compact city.'},
+ {id:'mara',n:'Maasai Mara',c:'Kenya',r:'Africa',t:'Safari',s:'Safari',flight:480000,hotel:140000,daily:60000,visa:65000,best:'Jul–Oct',pop:7,nights:'4 to 6',tags:['Big Five','Great Migration','Hot-air balloon'],note:'Game drives at sunrise and a lodge under the stars.'},
+ {id:'marrakech',n:'Marrakech',c:'Morocco',r:'Africa',t:'Culture',s:'Culture',flight:520000,hotel:60000,daily:30000,visa:0,best:'Mar–May, Sep–Nov',pop:7,nights:'4 to 6',tags:['Medina','Atlas Mountains','Hammams'],note:'Souks, riads and a day trip to the Atlas.'},
+ {id:'accra',n:'Accra',c:'Ghana',r:'Africa',t:'City',s:'City',flight:260000,hotel:55000,daily:28000,visa:0,best:'Nov–Mar',pop:6,nights:'3 to 5',tags:['Nightlife','Beaches','Cape Coast Castle'],note:'Short flight, big flavours, easy weekend.'},
+ {id:'dubai',n:'Dubai',c:'UAE',r:'Middle East',t:'City',s:'City',flight:780000,hotel:110000,daily:55000,visa:95000,best:'Nov–Mar',pop:10,nights:'4 to 7',tags:['Burj Khalifa','Desert safari','Shopping'],note:'Skyline, souks and the Gulf in one stopover or full holiday.'},
+ {id:'cairo',n:'Cairo and Giza',c:'Egypt',r:'Middle East',t:'Culture',s:'Culture',flight:640000,hotel:65000,daily:32000,visa:70000,best:'Oct–Apr',pop:6,nights:'5 to 7',tags:['Pyramids','Nile cruise','Museums'],note:'Stand where the pharaohs did, then sail the Nile.'},
+ {id:'santorini',n:'Santorini',c:'Greece',r:'Europe',t:'Beach',s:'Beach',flight:1050000,hotel:160000,daily:70000,visa:185000,best:'May–Oct',pop:8,nights:'5 to 7',tags:['Sunsets','Caldera views','Wine'],note:'White houses over a blue caldera. Schengen visa required.'},
+ {id:'london',n:'London',c:'United Kingdom',r:'Europe',t:'City',s:'City',flight:980000,hotel:170000,daily:80000,visa:210000,best:'May–Sep',pop:9,nights:'4 to 8',tags:['Museums','Theatre','Markets'],note:'Classic city break with free world-class museums.'},
+ {id:'bali',n:'Bali',c:'Indonesia',r:'Asia',t:'Beach',s:'Mountain',flight:1250000,hotel:60000,daily:30000,visa:55000,best:'Apr–Oct',pop:8,nights:'7 to 10',tags:['Rice terraces','Surf','Temples'],note:'Jungle, surf and slow mornings. Great value on the ground.'}
+];
+const REG=['All','Africa','Middle East','Europe','Asia'];
+const MULT={Budget:.6,Comfort:1,Luxury:2.2};
+const fromPrice=d=>d.flight+d.hotel*5+d.daily*5+d.visa;
+const DEALS=[{d:'zanzibar',off:15,blurb:'Seven nights, breakfast included, airport transfers on us. Book by the end of the month.',ends:'Ends 30 Nov'},{d:'dubai',off:10,blurb:'Four-night city break with desert safari and a Burj Khalifa ticket.',ends:'Ends 20 Nov'},{d:'capetown',off:12,blurb:'Wine tram day, Table Mountain cable car and Robben Island ferry bundled in.',ends:'Ends 15 Dec'}];
+const FAQ=[['Which countries need a visa for Nigerian passports?','Most of Europe, the UK, the UAE, Egypt and Kenya (e-visa) need advance approval. Ghana, Morocco and South Africa are easier for some travellers. Rules change, so we confirm with the embassy before you pay.'],['What documents do I need for a visa?','Usually a passport valid six months past your return date, bank statements, proof of employment or business, a hotel and flight itinerary, and passport photos. We give you an exact checklist per country.'],['Can I pay in instalments?','Yes. Pay in three parts: 40% to confirm, 30% a month before, 30% two weeks before travel. Flights are ticketed at the first payment.'],['What if my visa is refused?','Visa fees go to the embassy and are not refundable. We refund the flight and hotel if you booked a refundable package with us and send the refusal letter.'],['Do you cover travel insurance?','Yes. Cover starts from a few thousand Naira per person and is required for Schengen visas.'],['How early should I book?','Six to eight weeks for Africa and the Gulf, three to four months for Europe, and as soon as you can for school holidays and December.']];
+const HRS=[['Sunday','Closed'],['Monday','09:00 – 18:00'],['Tuesday','09:00 – 18:00'],['Wednesday','09:00 – 18:00'],['Thursday','09:00 – 18:00'],['Friday','09:00 – 18:00'],['Saturday','10:00 – 15:00']];
+
+/* ---------- state ---------- */
+let region='All',saved=new Set(),plan={dest:'zanzibar',pp:2,nights:5,hotel:1,visa:true,ins:true};
+try{(JSON.parse(localStorage.getItem('kv-saved')||'[]')).forEach(x=>saved.add(x))}catch(e){}
+const byId=id=>D.find(d=>d.id===id);
+function toast(t){const e=document.createElement('div');e.className='toast';e.textContent=t;e.setAttribute('role','status');document.body.appendChild(e);setTimeout(()=>e.remove(),1800)}
+
+/* ---------- render ---------- */
+function heart(d){const on=saved.has(d.id);return `<button class="heart" data-save="${d.id}" aria-pressed="${on}" aria-label="${on?'Remove':'Save'} ${esc(d.n)}"><svg width="20" height="20" viewBox="0 0 24 24" fill="${on?'currentColor':'none'}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-4.4-9.3-9A5.2 5.2 0 0112 6.2 5.2 5.2 0 0121.3 12c-2.3 4.6-9.3 9-9.3 9z"/></svg></button>`}
+function card(d){
+  return `<article class="card"><div class="art">${slot('dest-'+d.id,scene(d.s,d.pop*3+d.n.length),d.n+', '+d.c)}<span class="chip">${esc(d.t)}</span>${heart(d)}</div><div class="body"><div class="row"><h3>${esc(d.n)}</h3><span class="from">${esc(d.c)}</span></div><p class="muted" style="font-size:.92rem">${esc(d.note)}</p><div class="tags">${d.tags.map(t=>`<span class="tg">${esc(t)}</span>`).join('')}</div><div class="best">Best time: ${esc(d.best)} · ${esc(d.nights)} nights</div><div class="row" style="margin-top:.3rem"><div><span class="from">from</span><div class="price">${fmt(fromPrice(d))}</div></div><button class="btn ocean" style="padding:.5rem 1.1rem" data-plan="${d.id}">Plan this</button></div></div></article>`;
+}
+function renderHome(){
+  $$('#heroBox>svg,#heroBox>img').forEach(x=>x.remove());
+  $('#heroBox').insertAdjacentHTML('afterbegin',slot('hero',scene('Beach',4,800,500),'Tropical beach at sunset'));
+  $('#popular').innerHTML=D.filter(d=>d.pop>=9||d.id==='zanzibar').slice(0,3).map(card).join('');
+}
+function filtered(type,budget,sort,onlySaved){
+  let l=D.filter(d=>(region==='All'||d.r===region)&&(type==='All'||d.t===type)&&(!budget||fromPrice(d)<=budget)&&(!onlySaved||saved.has(d.id)));
+  if(sort==='low')l.sort((a,b)=>fromPrice(a)-fromPrice(b));else if(sort==='high')l.sort((a,b)=>fromPrice(b)-fromPrice(a));else l.sort((a,b)=>b.pop-a.pop);
+  return l;
+}
+function renderDest(){
+  $('#regions').innerHTML=REG.map(r=>`<button class="tab" data-region="${r}" aria-pressed="${r===region}">${r}</button>`).join('');
+  const l=filtered($('#dType').value,+$('#dBudget').value,$('#dSort').value,$('#onlySaved').checked);
+  $('#destGrid').innerHTML=l.map(card).join('');$('#destEmpty').hidden=l.length>0;
+}
+function renderSaved(){const n=saved.size,b=$('#savedN');b.hidden=!n;b.textContent=n}
+function renderDeals(){
+  $('#deals').innerHTML=DEALS.map((x,i)=>{const d=byId(x.d),p=fromPrice(d)*(1-x.off/100);return `<article class="deal"><div class="art">${slot('deal-'+d.id,scene(d.s,i*5+2),d.n)}</div><div class="in"><span class="eyebrow">${esc(x.ends)}</span><h2 style="font-size:2rem">${esc(d.n)}, ${esc(d.c)}</h2><p class="muted">${esc(x.blurb)}</p><div><span class="strike">${fmt(fromPrice(d))}</span> <span class="price" style="font-size:1.8rem">${fmt(p)}</span> <span class="from">per person · save ${x.off}%</span></div><div><button class="btn" data-plan="${d.id}">Plan this trip</button></div></div></article>`}).join('');
+}
+function renderFaq(){$('#faq').innerHTML=FAQ.map(f=>`<details><summary>${esc(f[0])}</summary><p>${esc(f[1])}</p></details>`).join('')+`<div style="margin-top:1rem"><button class="btn" data-go="contact">Ask us something else</button></div>`}
+function renderHours(){const t=new Date().getDay();$('#hours').innerHTML=[1,2,3,4,5,6,0].map(i=>`<tr class="${i===t?'today':''}"><td>${HRS[i][0]}${i===t?' (today)':''}</td><td>${HRS[i][1]}</td></tr>`).join('')}
+
+/* ---------- estimator ---------- */
+function estimate(){
+  const d=byId(plan.dest),n=plan.nights,pp=plan.pp;
+  const rooms=Math.ceil(pp/2),hotel=d.hotel*plan.hotel*n*rooms,flights=d.flight*pp,daily=d.daily*(plan.hotel>1?1.4:plan.hotel<1?.8:1)*n*pp,visa=plan.visa?d.visa*pp:0;
+  const sub=hotel+flights+daily+visa,ins=plan.ins?Math.round(sub*0.02):0,total=sub+ins;
+  return{d,rows:[['Flights',flights,'#ff6b4a'],['Hotel ('+rooms+(rooms>1?' rooms':' room')+', '+n+' nights)',hotel,'#f3d9a4'],['Food and activities',daily,'#7fd0e6'],['Visa',visa,'#ffffff'],['Insurance',ins,'#9be3b8']],total,pp};
+}
+function renderPlan(){
+  const e=estimate();
+  $('#ppN').textContent=plan.pp;$('#nN').textContent=plan.nights;
+  $$('#hotel button').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.h===plan.hotel));
+  $('#estTotal').textContent=fmt(e.total);
+  $('#estPer').textContent=fmt(e.total/e.pp)+' per person · '+e.d.n;
+  const tot=e.rows.reduce((a,r)=>a+r[1],0)||1;
+  $('#stack').innerHTML=e.rows.filter(r=>r[1]>0).map(r=>`<i style="width:${r[1]/tot*100}%;background:${r[2]}" title="${esc(r[0])}"></i>`).join('');
+  $('#legend').innerHTML=e.rows.filter(r=>r[1]>0).map(r=>`<span style="--c:${r[2]}">${esc(r[0].split(' (')[0])}</span>`).join('');
+  $('#estTable').innerHTML=e.rows.filter(r=>r[1]>0).map(r=>`<tr><td>${esc(r[0])}</td><td>${fmt(r[1])}</td></tr>`).join('');
+}
+
+/* ---------- navigation ---------- */
+const PAGES=$$('.page').map(p=>p.dataset.page);
+function go(p,push=true){
+  if(!PAGES.includes(p))p='home';
+  $$('.page').forEach(s=>s.hidden=s.dataset.page!==p);
+  $$('.drawer a').forEach(a=>{a.dataset.go===p?a.setAttribute('aria-current','page'):a.removeAttribute('aria-current')});
+  closeMenu();window.scrollTo(0,0);
+  if(push&&location.hash!=='#'+p)try{history.replaceState(null,'','#'+p)}catch(e){};
+}
+function openMenu(){$('#menu').classList.add('open');$('#scrim').hidden=false;$('#burger').setAttribute('aria-expanded','true');$('#burger').setAttribute('aria-label','Close menu')}
+function closeMenu(){$('#menu').classList.remove('open');$('#scrim').hidden=true;$('#burger').setAttribute('aria-expanded','false');$('#burger').setAttribute('aria-label','Open menu')}
+$('#burger').onclick=()=>$('#menu').classList.contains('open')?closeMenu():openMenu();
+$('#scrim').onclick=closeMenu;
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeMenu()});
+window.addEventListener('hashchange',()=>go(location.hash.slice(1),false));
+
+function refreshCards(){renderHome();renderDest();renderDeals();renderSaved()}
+document.addEventListener('click',e=>{
+  const sv=e.target.closest('[data-saved]');if(sv){e.preventDefault();$('#onlySaved').checked=true;region='All';renderDest();go('destinations');return}
+  const g=e.target.closest('[data-go]');if(g){e.preventDefault();go(g.dataset.go);return}
+  const h=e.target.closest('[data-save]');if(h){const id=h.dataset.save;if(saved.has(id)){saved.delete(id);toast('Removed from saved')}else{saved.add(id);toast('Saved to your trips')}try{localStorage.setItem('kv-saved',JSON.stringify([...saved]))}catch(x){}
+    refreshCards();return}
+  const rg=e.target.closest('[data-region]');if(rg){region=rg.dataset.region;renderDest();return}
+  const pl=e.target.closest('[data-plan]');if(pl){plan.dest=pl.dataset.plan;$('#pDest').value=plan.dest;renderPlan();go('planner');return}
+  const st=e.target.closest('[data-step]');if(st){const k=st.dataset.step;if(k==='pp-')plan.pp=Math.max(1,plan.pp-1);if(k==='pp+')plan.pp=Math.min(10,plan.pp+1);if(k==='n-')plan.nights=Math.max(2,plan.nights-1);if(k==='n+')plan.nights=Math.min(21,plan.nights+1);renderPlan();return}
+  const ho=e.target.closest('[data-h]');if(ho){plan.hotel=+ho.dataset.h;renderPlan();return}
+  const cp=e.target.closest('[data-copy]');if(cp){const t=cp.dataset.copy;(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>toast('Copied')).catch(()=>toast(t))}
+});
+['dType','dBudget','dSort','onlySaved'].forEach(i=>$('#'+i).addEventListener('change',renderDest));
+$('#pDest').innerHTML=D.map(d=>`<option value="${d.id}">${esc(d.n)}, ${esc(d.c)}</option>`).join('');
+$('#eDest').innerHTML='<option value="">Not sure yet</option>'+D.map(d=>`<option value="${d.id}">${esc(d.n)}, ${esc(d.c)}</option>`).join('');
+$('#pDest').addEventListener('change',()=>{plan.dest=$('#pDest').value;renderPlan()});
+$('#pVisa').addEventListener('change',()=>{plan.visa=$('#pVisa').checked;renderPlan()});
+$('#pIns').addEventListener('change',()=>{plan.ins=$('#pIns').checked;renderPlan()});
+$('#planForm').addEventListener('submit',e=>e.preventDefault());
+$('#toEnquiry').onclick=()=>{const e=estimate();$('#eDest').value=plan.dest;$('#enqSummary').textContent=`Your plan: ${e.d.n} · ${plan.pp} traveller${plan.pp>1?'s':''} · ${plan.nights} nights · about ${fmt(e.total)}.`;go('contact')};
+$('#finder').addEventListener('submit',e=>{e.preventDefault();$('#dType').value=$('#fType').value;$('#dBudget').value=$('#fBudget').value;plan.pp=+$('#fPpl').value;region='All';$('#onlySaved').checked=false;renderDest();renderPlan();go('destinations')});
+
+/* ---------- enquiry ---------- */
+const phoneOk=v=>/^[+\d][\d\s()-]{7,}$/.test(v);
+$('#enqForm').addEventListener('submit',e=>{
+  e.preventDefault();
+  const n=$('#eName').value.trim(),p=$('#ePhone').value.trim();
+  const er={eeName:n.length>=2?'':'Enter your full name.',eePhone:phoneOk(p)?'':'Enter a valid phone number.'};
+  let bad=null;for(const k in er){$('#'+k).textContent=er[k];if(er[k]&&!bad)bad=k}
+  if(bad){$('#'+bad).scrollIntoView({block:'center',behavior:'smooth'});return}
+  const d=byId($('#eDest').value);
+  $('.contact').innerHTML=`<div class="confirm" role="status" style="grid-column:1/-1"><span class="eyebrow">Enquiry received</span><div class="ref">KV-${Math.floor(1000+Math.random()*9000)}</div><p>Thank you, <b>${esc(n)}</b>. A travel advisor will call ${esc(p)} within one working day${d?` about <b>${esc(d.n)}</b>`:''}.</p><p class="muted">Portfolio demo: nothing was actually sent.</p><div><button class="btn ocean" id="again">Plan another trip</button></div></div>`;
+  $('#again').onclick=()=>location.reload();window.scrollTo(0,0);
+});
+$('#alertForm').addEventListener('submit',e=>{e.preventDefault();const v=$('#aEmail').value.trim();if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v)){$('#eAlert').textContent='Enter a valid email address.';return}$('#eAlert').textContent='';e.target.reset();toast('You are on the list (demo)')});
+(function(){const t=new Date(),p=n=>String(n).padStart(2,'0');$('#pDate').min=`${t.getFullYear()}-${p(t.getMonth()+1)}`})();
+
+renderHome();renderDest();renderDeals();renderFaq();renderHours();renderSaved();renderPlan();
+go(location.hash.slice(1)||'home',false);
+</script>

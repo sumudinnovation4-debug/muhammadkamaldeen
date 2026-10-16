@@ -1,0 +1,514 @@
+<title>Iya Bisi Kitchen</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&family=Instrument+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout concept: a Lagos kitchen after dark. Deep green ground, marigold for money and action, chili red for heat.
+   Dishes are drawn top-down on plates in code. Cart is global; hamburger drawer moves between six pages. */
+:root{
+  --bg:#0f2419; --surface:#173628; --surface2:#1f4634; --fg:#f6f0e0; --muted:#a9c0b2;
+  --gold:#f2b632; --gold-fg:#1b1405; --chili:#ee5a3c; --line:#2b5340; --ok:#8fe3a8;
+  --disp:'Bricolage Grotesque','Arial Black',sans-serif; --body:'Instrument Sans','Helvetica Neue',Arial,sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--fg);font:400 16px/1.55 var(--body);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:60}
+.wrap{max-width:1080px;margin:0 auto}
+h1,h2,h3{font-family:var(--disp);font-weight:800;line-height:1.02;margin:0;text-wrap:balance;letter-spacing:-.02em}
+h1{font-size:clamp(2.7rem,10vw,5.6rem)} h2{font-size:clamp(1.9rem,6vw,3rem)} h3{font-size:1.25rem;letter-spacing:-.01em}
+p{margin:0;max-width:62ch}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+.eyebrow{font:600 .76rem/1 var(--body);letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+.muted{color:var(--muted)}
+.btn{display:inline-flex;justify-content:center;align-items:center;gap:.5rem;background:var(--gold);color:var(--gold-fg);border:2px solid var(--gold);padding:.8rem 1.4rem;border-radius:999px;font-weight:600;text-decoration:none}
+.btn.ghost{background:none;color:var(--fg);border-color:var(--line)}
+.btn.ghost:hover{border-color:var(--gold)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:color-mix(in srgb,var(--bg) 93%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);
+  margin:0 calc(-1*max(16px,env(safe-area-inset-left,0px)));padding:.65rem max(16px,env(safe-area-inset-right,0px)) .65rem max(16px,env(safe-area-inset-left,0px))}
+.bar .wrap{display:flex;align-items:center;gap:.7rem}
+.brand{margin-right:auto;background:none;border:0;padding:0;text-align:left;font:800 1.3rem/1 var(--disp);letter-spacing:-.02em;display:flex;gap:.5rem;align-items:center}
+.brand svg{width:34px;height:34px;flex:none}
+.iconbtn{position:relative;width:44px;height:44px;border:1px solid var(--line);background:var(--surface);border-radius:12px;display:grid;place-content:center}
+.iconbtn .n{position:absolute;top:-6px;right:-6px;min-width:20px;height:20px;border-radius:10px;background:var(--chili);color:#fff;font-size:.75rem;font-weight:700;display:grid;place-content:center;padding:0 5px}
+.burger{gap:5px}.burger i{display:block;width:20px;height:2px;background:var(--fg);transition:transform .25s,opacity .25s}
+.burger[aria-expanded="true"] i:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.burger[aria-expanded="true"] i:nth-child(2){opacity:0}
+.burger[aria-expanded="true"] i:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+.scrim{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:70}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(86vw,340px);z-index:80;background:var(--surface);border-left:1px solid var(--line);
+  padding:calc(env(safe-area-inset-top,0px) + 1.2rem) max(22px,env(safe-area-inset-right,0px)) calc(env(safe-area-inset-bottom,0px) + 1.2rem) 24px;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .28s ease;visibility:hidden}
+.drawer.open{transform:none;visibility:visible}
+.drawer a{padding:.8rem 0;border-bottom:1px solid var(--line);font:800 1.8rem/1.1 var(--disp);letter-spacing:-.02em;color:var(--fg);text-decoration:none}
+.drawer a[aria-current="page"]{color:var(--gold)}
+.drawer .small{margin-top:auto;color:var(--muted);font-size:.9rem}
+
+.page{padding-block:2rem 3rem;animation:in .35s ease both}
+@keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.page{animation:none}.drawer{transition:none}html{scroll-behavior:auto}}
+.sec{margin-top:3rem;display:grid;gap:1.3rem}
+.sec>header{display:grid;gap:.6rem}
+.top{margin-top:0}
+.top h1{font-size:clamp(2.3rem,8vw,4rem)}
+
+.hero{display:grid;gap:2rem;align-items:center}
+@media(min-width:820px){.hero{grid-template-columns:1.1fr .9fr}}
+.hero .copy{display:grid;gap:1.1rem;justify-items:start}
+.hero .cta{display:flex;gap:.7rem;flex-wrap:wrap}
+.hero h1 em{font-style:normal;color:var(--gold)}
+.heroPlate{position:relative;aspect-ratio:1;max-width:460px;width:100%;justify-self:center}
+.heroPlate .d{position:absolute;border-radius:50%;overflow:hidden;box-shadow:0 18px 40px rgba(0,0,0,.45)}
+.heroPlate .d svg{display:block;width:100%;height:100%}
+.d1{inset:0 12% 12% 0}.d2{width:44%;height:44%;right:0;bottom:2%;border:6px solid var(--bg)}.d3{width:30%;height:30%;left:2%;bottom:0;border:5px solid var(--bg)}
+.strip{display:grid;gap:1px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));background:var(--line);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.strip div{background:var(--surface);padding:1rem 1.1rem;display:grid;gap:.15rem}
+.strip b{font:800 1.5rem/1 var(--disp)}
+.strip span{color:var(--muted);font-size:.85rem}
+.grid{display:grid;gap:1rem;grid-template-columns:repeat(auto-fill,minmax(min(100%,250px),1fr))}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;overflow:hidden;display:grid;align-content:start}
+.card .img{aspect-ratio:4/3;display:grid;place-items:center}
+.card .img svg{height:100%;width:auto;max-width:100%}
+.card .body{padding:.9rem 1rem 1.1rem;display:grid;gap:.45rem}
+.card .row{display:flex;justify-content:space-between;align-items:center;gap:.6rem}
+.price{font:800 1.15rem var(--disp);color:var(--gold)}
+.badge{font-size:.72rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:.15rem .55rem;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
+.badge.hot{color:var(--chili);border-color:var(--chili)}
+.badge.veg{color:var(--ok);border-color:var(--ok)}
+.tags{display:flex;gap:.35rem;flex-wrap:wrap}
+.add{background:var(--gold);color:var(--gold-fg);border:0;border-radius:999px;padding:.4rem 1rem;font-weight:600;font-size:.9rem}
+.qty{display:inline-flex;align-items:center;border:1px solid var(--gold);border-radius:999px;overflow:hidden}
+.qty button{width:34px;height:34px;background:none;border:0;color:var(--gold);font-size:1.2rem}
+.qty span{min-width:26px;text-align:center;font-weight:600}
+
+.tools{display:grid;gap:.8rem}
+.tabs{display:flex;gap:.5rem;overflow-x:auto;padding-bottom:.3rem;scrollbar-width:thin}
+.tab{flex:none;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:.45rem 1rem;font-weight:500}
+.tab[aria-pressed="true"]{background:var(--gold);color:var(--gold-fg);border-color:var(--gold)}
+input,select,textarea{font:inherit;color:var(--fg);background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:.75rem .85rem;width:100%;min-width:0}
+textarea{min-height:84px;resize:vertical}
+label{display:grid;gap:.35rem;font-weight:500;font-size:.92rem}
+form{display:grid;gap:1rem}
+.two{display:grid;gap:1rem;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr))}
+.err{color:var(--chili);font-size:.85rem;min-height:1.1em}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:1.2rem;display:grid;gap:.9rem}
+.seg{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.seg button{border:0;background:none;padding:.7rem;font-weight:600}
+.seg button[aria-pressed="true"]{background:var(--gold);color:var(--gold-fg)}
+.lines{display:grid;gap:.2rem}
+.line{display:grid;grid-template-columns:52px 1fr auto;gap:.8rem;align-items:center;padding:.6rem 0;border-bottom:1px solid var(--line)}
+.line .th{width:52px;height:52px;border-radius:10px;overflow:hidden}
+.line .th svg{width:100%;height:100%;display:block}
+.line small{color:var(--muted);display:block}
+.sum{display:grid;gap:.4rem}
+.sum div{display:flex;justify-content:space-between}
+.sum .t{border-top:1px solid var(--line);padding-top:.6rem;font:800 1.3rem var(--disp)}
+.layout{display:grid;gap:1.4rem}
+@media(min-width:900px){.layout{grid-template-columns:1fr 380px;align-items:start}}
+.confirm{border:2px solid var(--gold);border-radius:18px;padding:1.4rem;display:grid;gap:.7rem;background:var(--surface)}
+.ref{font:800 2rem var(--disp);color:var(--gold)}
+.stepper{display:flex;align-items:center;gap:.8rem}
+.stepper .qty span{min-width:40px}
+.mosaic{display:grid;grid-template-columns:repeat(2,1fr);gap:.6rem}
+@media(min-width:700px){.mosaic{grid-template-columns:repeat(4,1fr)}}
+.mosaic .m{border-radius:14px;overflow:hidden;aspect-ratio:1;position:relative}
+.mosaic svg{display:block;width:100%;height:100%}
+.mosaic span{position:absolute;left:.6rem;bottom:.5rem;font-weight:600;font-size:.85rem;color:#fff;text-shadow:0 1px 6px rgba(0,0,0,.7)}
+.pull{font:800 clamp(1.4rem,4.5vw,2.2rem)/1.15 var(--disp);letter-spacing:-.02em;max-width:26ch}
+table{border-collapse:collapse;width:100%}
+td{padding:.55rem 0;border-bottom:1px solid var(--line)}
+td:last-child{text-align:right}
+tr.today td{color:var(--gold);font-weight:600}
+.copy-row{display:flex;gap:.6rem;align-items:center;flex-wrap:wrap}
+.contact{display:grid;gap:1.3rem}
+@media(min-width:820px){.contact{grid-template-columns:1fr 1fr}}
+footer{border-top:1px solid var(--line);padding-block:1.5rem 2.4rem;color:var(--muted);font-size:.9rem}
+.toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 18px);transform:translateX(-50%);background:var(--fg);color:var(--bg);padding:.7rem 1.1rem;border-radius:999px;font-weight:600;z-index:90;max-width:90vw}
+.floatcart{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom,0px) + 14px);z-index:40;background:var(--gold);color:var(--gold-fg);border:0;border-radius:999px;padding:.85rem 1.4rem;font-weight:700;box-shadow:0 10px 30px rgba(0,0,0,.45);display:flex;gap:.8rem}
+.photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.line .th{position:relative}.card .img{position:relative}
+.quote{margin:0;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:1.2rem;display:grid;gap:.6rem}
+.quote small{color:var(--muted)}
+.stars{color:var(--gold);letter-spacing:.15em}
+.tiers{display:grid;gap:1rem;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr))}
+.tier{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:1.2rem;display:grid;gap:.5rem;align-content:start}
+.tier ul{margin:0;padding-left:1.1rem;color:var(--muted);font-size:.92rem}
+</style>
+
+<header class="bar"><div class="wrap">
+  <button class="brand" data-go="home" aria-label="Iya Bisi Kitchen, home">
+    <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="19" fill="var(--gold)"/><circle cx="20" cy="20" r="12" fill="none" stroke="#1b1405" stroke-width="2"/><path d="M14 20h12M20 14v12" stroke="#1b1405" stroke-width="2" stroke-linecap="round" opacity=".0"/><path d="M13 23c2-6 12-6 14 0z" fill="#1b1405"/><circle cx="20" cy="16" r="2.2" fill="#1b1405"/></svg>
+    Iya Bisi Kitchen
+  </button>
+  <button class="iconbtn" data-go="order" aria-label="Open your order"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h14l-1.2 11H6.2z"/><path d="M9 8a3 3 0 016 0"/></svg><span class="n" id="badge" hidden>0</span></button>
+  <button class="iconbtn burger" id="burger" aria-label="Open menu" aria-expanded="false" aria-controls="menu"><i></i><i></i><i></i></button>
+</div></header>
+
+<div class="scrim" id="scrim" hidden></div>
+<nav class="drawer" id="menu" aria-label="Main menu">
+  <a href="#home" data-go="home">Home</a>
+  <a href="#menu-page" data-go="menu">Menu</a>
+  <a href="#order" data-go="order">Your order</a>
+  <a href="#reserve" data-go="reserve">Reserve a table</a>
+  <a href="#story" data-go="story">Our story</a>
+  <a href="#contact" data-go="contact">Find us</a>
+  <p class="small">Open daily · 11:00 – 22:00<br>Lekki Phase 1, Lagos</p>
+</nav>
+
+<main class="wrap">
+
+<section class="page" data-page="home">
+  <div class="hero">
+    <div class="copy">
+      <span class="eyebrow">Nigerian kitchen · Lekki, Lagos</span>
+      <h1>Lagos, <em>served hot.</em></h1>
+      <p class="muted">Party jollof with the real smoky bottom, suya off the open fire, soups our mothers would approve. Dine in, pick up or have it delivered.</p>
+      <div class="cta"><button class="btn" data-go="menu">See the menu</button><button class="btn ghost" data-go="reserve">Reserve a table</button></div>
+    </div>
+    <div class="heroPlate" id="heroPlate" aria-hidden="true"></div>
+  </div>
+
+  <div class="sec"><div class="strip">
+    <div><b>35 min</b><span>average delivery</span></div>
+    <div><b>11am – 10pm</b><span>open every day</span></div>
+    <div><b>From ₦1,500</b><span>delivery, by area</span></div>
+    <div><b>4.8 ★</b><span>from 2,300 reviews</span></div>
+  </div></div>
+
+  <div class="sec">
+    <header><span class="eyebrow">Today’s specials</span><h2>Start with these</h2></header>
+    <div class="grid" id="specials"></div>
+  </div>
+
+  <div class="sec">
+    <header><span class="eyebrow">Guests say</span><h2>Why people come back</h2></header>
+    <div class="grid">
+      <figure class="quote"><div class="stars" aria-label="5 stars">★★★★★</div><p>The jollof has that proper smoky bottom. Tastes like a Lagos wedding in the best way.</p><small>Kemi A. · Lekki</small></figure>
+      <figure class="quote"><div class="stars" aria-label="5 stars">★★★★★</div><p>Suya was hot, thin and still juicy when it reached Ikoyi. Delivery took 32 minutes.</p><small>Tobi R. · Ikoyi</small></figure>
+      <figure class="quote"><div class="stars" aria-label="5 stars">★★★★★</div><p>Pepper soup on a rainy night is exactly what I needed. We booked a table for the next week.</p><small>Funmi & Dayo · Victoria Island</small></figure>
+    </div>
+  </div>
+
+  <div class="sec">
+    <header><span class="eyebrow">The heat scale</span><h2>How spicy is spicy?</h2><p class="muted">Every dish is marked. Ask for it mild and we will cool the pepper without losing the flavour.</p></header>
+    <div class="tags"><span class="badge veg">Vegetarian</span><span class="badge hot">Hot</span><span class="badge">Mild</span></div>
+  </div>
+</section>
+
+<section class="page" data-page="menu" hidden>
+  <header class="sec top"><span class="eyebrow">Menu</span><h1>Eat well</h1></header>
+  <div class="sec tools">
+    <input type="search" id="q" placeholder="Search jollof, suya, soup…" aria-label="Search the menu">
+    <div class="tabs" id="tabs" role="group" aria-label="Menu categories"></div>
+    <div class="tags" id="diet"><button class="tab" data-diet="veg" aria-pressed="false">Vegetarian only</button><button class="tab" data-diet="mild" aria-pressed="false">Not spicy</button></div>
+  </div>
+  <div class="sec grid" id="menuGrid"></div>
+  <p class="muted" id="menuEmpty" hidden>Nothing matches that. Try another word or clear the filters.</p>
+</section>
+
+<section class="page" data-page="order" hidden>
+  <header class="sec top"><span class="eyebrow">Your order</span><h1>Almost there</h1></header>
+  <div class="sec" id="orderArea">
+    <div class="layout">
+      <div class="panel"><h3>Items</h3><div class="lines" id="lines"></div><button class="btn ghost" data-go="menu" style="justify-self:start">Add more food</button></div>
+      <form id="orderForm" class="panel" novalidate>
+        <h3>Checkout</h3>
+        <div class="seg" role="group" aria-label="Delivery or pickup"><button type="button" data-ot="delivery" aria-pressed="true">Delivery</button><button type="button" data-ot="pickup" aria-pressed="false">Pickup</button></div>
+        <label for="oName">Name<input id="oName" autocomplete="name"><span class="err" id="eoName"></span></label>
+        <label for="oPhone">Phone<input id="oPhone" type="tel" autocomplete="tel" placeholder="0801 234 5678"><span class="err" id="eoPhone"></span></label>
+        <label for="oZone" id="zoneL">Delivery area<select id="oZone"></select></label>
+        <label for="oAddr" id="addrL">Delivery address<textarea id="oAddr" placeholder="House number, street, landmark"></textarea><span class="err" id="eoAddr"></span></label>
+        <label for="oPay">Payment<select id="oPay"><option>Pay on delivery or pickup</option><option>Bank transfer</option></select></label>
+        <label for="oNote">Note for the kitchen<textarea id="oNote" placeholder="Allergies, extra pepper, no onions"></textarea></label>
+        <div class="sum" id="sum"></div>
+        <span class="err" id="eoCart"></span>
+        <button class="btn" type="submit">Place order</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<section class="page" data-page="reserve" hidden>
+  <header class="sec top"><span class="eyebrow">Reservations</span><h1>Book a table</h1><p class="muted">Tables hold for 15 minutes. Groups of 9 or more, call us.</p></header>
+  <div class="sec" id="resArea">
+    <form id="resForm" class="panel" novalidate>
+      <div class="two">
+        <label for="rDate">Date<input type="date" id="rDate"><span class="err" id="erDate"></span></label>
+        <label for="rTime">Time<select id="rTime"></select></label>
+      </div>
+      <div><div style="font-weight:500;font-size:.92rem;margin-bottom:.4rem">Guests</div>
+        <div class="stepper"><div class="qty"><button type="button" id="gMinus" aria-label="Fewer guests">−</button><span id="gNum">2</span><button type="button" id="gPlus" aria-label="More guests">+</button></div><span class="muted" id="gNote"></span></div></div>
+      <label for="rOcc">Occasion<select id="rOcc"><option>Just dinner</option><option>Birthday</option><option>Anniversary</option><option>Business meal</option><option>Family gathering</option></select></label>
+      <div class="two">
+        <label for="rName">Name<input id="rName" autocomplete="name"><span class="err" id="erName"></span></label>
+        <label for="rPhone">Phone<input id="rPhone" type="tel" autocomplete="tel"><span class="err" id="erPhone"></span></label>
+      </div>
+      <button class="btn" type="submit">Confirm reservation</button>
+    </form>
+  </div>
+</section>
+
+<section class="page" data-page="story" hidden>
+  <header class="sec top"><span class="eyebrow">Our story</span><h1>Cooked like home</h1></header>
+  <div class="sec">
+    <p class="pull">“Iya Bisi cooked for forty people every Sunday and never once measured the pepper.”</p>
+    <p class="muted">Iya Bisi Kitchen started on a single gas burner in 2014 and grew one plate at a time. Today we still cook in small batches, grind our own pepper base each morning and smoke our own suya spice. Nothing here comes from a packet.</p>
+    <p class="muted">We buy peppers, tomatoes and leaves from Lagos markets and our fish from Lekki fishermen. We pay fairly, so the same people supply us year after year.</p>
+  </div>
+  <div class="sec">
+    <header><span class="eyebrow">Catering</span><h2>Feeding a crowd</h2><p class="muted">Per-head pricing for 20 guests and above, with delivery, chafing dishes and servers included.</p></header>
+    <div class="tiers">
+      <div class="tier"><h3>Owambe Classic</h3><span class="price">₦8,500 / head</span><ul><li>Party jollof, fried rice, coleslaw</li><li>Grilled chicken and dodo</li><li>Zobo or water</li></ul></div>
+      <div class="tier"><h3>Heritage Feast</h3><span class="price">₦13,500 / head</span><ul><li>Egusi, efo riro, pounded yam</li><li>Beef suya and asun</li><li>Puff-puff and chin chin</li></ul></div>
+      <div class="tier"><h3>Cocktail Party</h3><span class="price">₦9,000 / head</span><ul><li>Small chops platters</li><li>Peppered gizzard and moi moi cups</li><li>Chapman station</li></ul></div>
+    </div>
+  </div>
+  <div class="sec"><header><span class="eyebrow">From the pass</span><h2>This week in the kitchen</h2></header><div class="mosaic" id="mosaic"></div></div>
+</section>
+
+<section class="page" data-page="contact" hidden>
+  <header class="sec top"><span class="eyebrow">Find us</span><h1>Come hungry</h1></header>
+  <div class="sec contact">
+    <div style="display:grid;gap:1.1rem;align-content:start">
+      <div class="panel"><h3>Opening hours</h3><table id="hours"></table></div>
+      <div class="panel"><h3>The kitchen</h3><p>22 Fola Osibo Street, Lekki Phase 1, Lagos <span class="muted">(sample address)</span></p>
+        <div class="copy-row"><span>+234 800 000 0001</span><button class="btn ghost" data-copy="+234 800 000 0001" style="padding:.35rem .9rem">Copy</button></div>
+        <div class="copy-row"><span>eat@iyabisi.example</span><button class="btn ghost" data-copy="eat@iyabisi.example" style="padding:.35rem .9rem">Copy</button></div></div>
+    </div>
+    <form id="msgForm" class="panel" novalidate>
+      <h3>Catering and events</h3><p class="muted">Tell us the date, headcount and what you have in mind.</p>
+      <label for="mName">Name<input id="mName"></label>
+      <label for="mText">Message<textarea id="mText"></textarea></label>
+      <div class="err" id="eMsg"></div><button class="btn" type="submit">Send enquiry</button>
+    </form>
+  </div>
+</section>
+
+<footer>© Iya Bisi Kitchen · Portfolio demo. All names, prices and contact details are samples.</footer>
+</main>
+<button class="floatcart" id="floatCart" data-go="order" hidden><span id="fcN"></span><span id="fcT"></span></button>
+
+<script>
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const fmt=n=>'₦'+n.toLocaleString('en-NG');
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const UNS=id=>`https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=900&q=75`;
+const slot=(name,svg,alt)=>svg+`<img class="photo" src="images/${name}.jpg" ${PHOTOS[name]?`data-fb="${UNS(PHOTOS[name])}"`:''} alt="${esc(alt)}" loading="lazy">`;
+const n2=i=>String(i).padStart(2,'0');
+document.addEventListener('error',e=>{const t=e.target;if(!t||!t.classList||!t.classList.contains('photo'))return;const fb=t.getAttribute('data-fb');if(fb&&t.src.indexOf('unsplash')<0){t.removeAttribute('data-fb');t.src=fb}else t.remove()},true);
+/* Photos: key = slot name, value = Unsplash photo id. A file named images/<key>.jpg overrides it. */
+const PHOTOS={
+ "dish-01": "1665332195309-9d75071138f0",
+ "dish-02": "1763048443535-1243379234e2",
+ "dish-03": "1593787615108-0f266e864866",
+ "dish-04": "1708782344137-21c48d98dfcc",
+ "dish-05": "1599354607448-8ad6e92b027a",
+ "dish-06": "1534939561126-855b8675edd7",
+ "dish-07": "1783408356251-f4953f943bb2",
+ "dish-08": "1610057098265-05f2bcbedd55",
+ "dish-09": "1641898378716-1f38ec04bb0f",
+ "dish-10": "1708782344071-c5382e27ef3e",
+ "dish-11": "1708782340372-27ca3c98f874",
+ "dish-12": "1540714605746-4f474eefc6d4",
+ "dish-15": "1767324672458-7dec3a2acffa",
+ "dish-17": "1593624191635-f1a49f5eca76",
+ "dish-18": "1594026290778-b00634357f20",
+ "hero-1": "1665332195309-9d75071138f0",
+ "hero-2": "1534939561126-855b8675edd7",
+ "hero-3": "1767324672458-7dec3a2acffa"
+};
+function rnd(seed){let s=(seed*9301+49297)%233280||1;return()=>((s=(s*16807)%2147483647)/2147483647)}
+let gid=0;
+
+/* ---------- dishes drawn top-down ---------- */
+function dish(type,seed=1,bg=['#1f4634','#10281d']){
+  const r=rnd(seed+7),id='d'+(++gid);let g='';
+  const sc=(n,f)=>{let o='';for(let i=0;i<n;i++)o+=f(i);return o};
+  const pt=(cx,cy,rad)=>{const a=r()*6.283,d=Math.sqrt(r())*rad;return[cx+Math.cos(a)*d,cy+Math.sin(a)*d]};
+  const plate=`<circle cx="150" cy="150" r="122" fill="#000" opacity=".18" transform="translate(4 8)"/><circle cx="150" cy="150" r="120" fill="#f5f0e4"/><circle cx="150" cy="150" r="96" fill="none" stroke="rgba(0,0,0,.08)" stroke-width="2"/>`;
+  const bowl=(c1,c2,rad=82)=>`<circle cx="150" cy="150" r="${rad+14}" fill="#000" opacity=".2" transform="translate(4 8)"/><circle cx="150" cy="150" r="${rad+12}" fill="#2a1a12"/><circle cx="150" cy="150" r="${rad+6}" fill="#4a3024"/><circle cx="150" cy="150" r="${rad}" fill="${c1}"/>`;
+  if(type==='jollof'){
+    g=plate+`<ellipse cx="132" cy="150" rx="66" ry="56" fill="#d34e22"/>`+sc(220,()=>{const[x,y]=pt(132,150,56);const c=['#e8693a','#c2411f','#f08a4b','#a8341a'][Math.floor(r()*4)];return`<ellipse cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" rx="3.4" ry="1.7" fill="${c}" transform="rotate(${(r()*180)|0} ${x.toFixed(1)} ${y.toFixed(1)})"/>`})
+     +`<g transform="rotate(-25 205 118)"><ellipse cx="205" cy="118" rx="38" ry="20" fill="#8a4a1f"/><ellipse cx="205" cy="114" rx="30" ry="9" fill="#b2682c" opacity=".7"/><rect x="236" y="113" width="26" height="8" rx="4" fill="#f1e8d5"/><circle cx="264" cy="112" r="6" fill="#f1e8d5"/><circle cx="264" cy="122" r="6" fill="#f1e8d5"/></g>`
+     +sc(3,i=>`<ellipse cx="${200+i*14}" cy="${196-i*8}" rx="16" ry="9" fill="#eab33c" stroke="#7a4a12" stroke-width="2.5" transform="rotate(-25 ${200+i*14} ${196-i*8})"/>`)}
+  else if(type==='suya'){
+    g=plate+sc(3,i=>{const y=96+i*42;return`<line x1="48" y1="${y+22}" x2="252" y2="${y-22}" stroke="#c9a36a" stroke-width="4" stroke-linecap="round"/>`+sc(6,k=>{const x=80+k*30,yy=y+22-(x-48)*0.2157;return`<rect x="${x-12}" y="${yy-12}" width="24" height="22" rx="6" fill="#7a3b1c" transform="rotate(-12 ${x} ${yy})"/><circle cx="${x-3}" cy="${yy-3}" r="2" fill="#e0452e"/><circle cx="${x+5}" cy="${yy+3}" r="1.6" fill="#f2b632"/>`})})
+     +sc(4,i=>`<circle cx="${70+i*55}" cy="${236-(i%2)*10}" r="12" fill="none" stroke="#a455a8" stroke-width="4"/>`)+sc(2,i=>`<circle cx="${96+i*110}" cy="64" r="14" fill="#d83a2e"/><circle cx="${96+i*110}" cy="64" r="7" fill="#f06a52"/>`)}
+  else if(type==='egusi'){
+    g=plate+bowl('#6b7f2a','#4f5f1c',66).replace(/cx="150" cy="150"/g,'cx="128" cy="140"')+sc(70,()=>{const[x,y]=pt(128,140,62);return`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${(2+r()*2.5).toFixed(1)}" fill="${['#e8d36a','#d98a2a','#4a5a18','#b8c850'][Math.floor(r()*4)]}"/>`})
+     +`<circle cx="214" cy="190" r="34" fill="#f3ecd8"/><circle cx="205" cy="180" r="14" fill="#fff" opacity=".5"/>`}
+  else if(type==='plantain'){
+    g=plate+sc(9,i=>{const a=i/9*6.283,x=150+Math.cos(a)*54*(i%2?1.1:.8),y=150+Math.sin(a)*54*(i%2?1.1:.8);return`<ellipse cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" rx="27" ry="14" fill="#eeb53a" stroke="#6f3f10" stroke-width="4" transform="rotate(${(a*57.3+90)|0} ${x.toFixed(1)} ${y.toFixed(1)})"/>`})+`<circle cx="150" cy="150" r="22" fill="#d83a22"/><circle cx="144" cy="144" r="7" fill="#f06a4c" opacity=".7"/>`}
+  else if(type==='pepper'){
+    g=plate+bowl('#a8431f','#7a2d12',74)+sc(18,()=>{const[x,y]=pt(150,150,66);return`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${(4+r()*5).toFixed(1)}" fill="#d9854a" opacity=".35"/>`})
+     +sc(6,()=>{const[x,y]=pt(150,150,52);return`<rect x="${(x-14).toFixed(1)}" y="${(y-10).toFixed(1)}" width="28" height="20" rx="7" fill="#6b3a22" transform="rotate(${(r()*90)|0} ${x.toFixed(1)} ${y.toFixed(1)})"/>`})
+     +sc(7,()=>{const[x,y]=pt(150,150,56);return`<ellipse cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" rx="11" ry="5" fill="#3f8a2e" transform="rotate(${(r()*180)|0} ${x.toFixed(1)} ${y.toFixed(1)})"/>`})
+     +sc(4,()=>{const[x,y]=pt(150,150,48);return`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="5" fill="#e0252b"/>`})}
+  else if(type==='puff'){
+    g=plate+sc(13,i=>{const[x,y]=pt(150,152,62);return`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${(17+r()*6).toFixed(1)}" fill="#d98f2a"/><circle cx="${(x-5).toFixed(1)}" cy="${(y-6).toFixed(1)}" r="6" fill="#f1b85a" opacity=".8"/>`})+sc(60,()=>{const[x,y]=pt(150,150,76);return`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="1.3" fill="#fff" opacity=".9"/>`})}
+  else if(type==='chinchin'){
+    g=plate+sc(70,()=>{const[x,y]=pt(150,150,86);return`<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${(10+r()*8).toFixed(1)}" height="${(9+r()*6).toFixed(1)}" rx="3" fill="${['#d9a95a','#c58f3e','#e6bf74'][Math.floor(r()*3)]}" transform="rotate(${(r()*180)|0} ${x.toFixed(1)} ${y.toFixed(1)})"/>`})}
+  else if(type==='zobo'||type==='chapman'){
+    const a=type==='zobo'?['#8d0f33','#5e0a22']:['#f0643a','#b02a22'];
+    g=`<circle cx="150" cy="150" r="128" fill="#000" opacity=".2" transform="translate(4 8)"/><circle cx="150" cy="150" r="124" fill="rgba(255,255,255,.85)"/><circle cx="150" cy="150" r="112" fill="${a[0]}"/><circle cx="150" cy="150" r="96" fill="${a[1]}" opacity=".55"/>`+sc(7,()=>{const[x,y]=pt(150,150,80);return`<rect x="${(x-12).toFixed(1)}" y="${(y-12).toFixed(1)}" width="24" height="24" rx="5" fill="#fff" opacity=".35" transform="rotate(${(r()*90)|0} ${x.toFixed(1)} ${y.toFixed(1)})"/>`})
+     +(type==='zobo'?sc(5,()=>{const[x,y]=pt(150,150,70);return`<ellipse cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" rx="13" ry="6" fill="#4fae4a" transform="rotate(${(r()*180)|0} ${x.toFixed(1)} ${y.toFixed(1)})"/>`}):sc(4,i=>`<circle cx="${100+i*30}" cy="${120+(i%2)*50}" r="16" fill="#6fae52" opacity=".85"/><circle cx="${100+i*30}" cy="${120+(i%2)*50}" r="11" fill="none" stroke="#d8f0c0" stroke-width="2"/>`))
+     +`<line x1="170" y1="150" x2="238" y2="52" stroke="#f2b632" stroke-width="8" stroke-linecap="round"/>`}
+  else if(type==='fish'){
+    g=plate+`<polygon points="238,150 270,118 270,182" fill="#7a5a2c"/><ellipse cx="150" cy="150" rx="92" ry="42" fill="#9a7436"/>`+sc(6,i=>`<path d="M${88+i*26} 116 Q${96+i*26} 150 ${88+i*26} 184" stroke="#4a2f12" stroke-width="5" fill="none" opacity=".7"/>`)+`<circle cx="82" cy="142" r="6" fill="#fff"/><circle cx="82" cy="142" r="3" fill="#111"/>`
+     +`<path d="M150 190 a30 30 0 0 0 60 0z" fill="#f6dc4a" transform="translate(-30 22) rotate(-10 150 190)"/>`+sc(3,i=>`<circle cx="${120+i*28}" cy="${210-i*5}" r="11" fill="none" stroke="#a455a8" stroke-width="3.5"/>`)}
+  else if(type==='moi'){
+    g=plate+sc(3,i=>{const x=[110,190,150][i],y=[130,130,196][i];return`<rect x="${x-34}" y="${y-30}" width="68" height="60" rx="26" fill="#e3a030"/><rect x="${x-34}" y="${y-30}" width="68" height="60" rx="26" fill="none" stroke="#2f7a2a" stroke-width="4" stroke-dasharray="22 8"/><circle cx="${x-8}" cy="${y-8}" r="6" fill="#f5d27a" opacity=".7"/>`})+`<circle cx="150" cy="110" r="14" fill="#fff"/><circle cx="150" cy="110" r="6" fill="#f2b632"/>`}
+  else if(type==='friedyam'){
+    g=plate+sc(9,i=>{const x=80+(i%3)*30,y=84+Math.floor(i/3)*30;return`<rect x="${x}" y="${y}" width="22" height="62" rx="6" fill="#efc56a" stroke="#c28a2b" stroke-width="3" transform="rotate(${-12+i*6} ${x+11} ${y+31})"/>`})+`<circle cx="226" cy="214" r="30" fill="#c0392b"/><circle cx="226" cy="214" r="22" fill="#e0452e"/>`}
+  else{ /* meat */
+    g=plate+sc(9,()=>{const[x,y]=pt(150,150,66);return`<rect x="${(x-15).toFixed(1)}" y="${(y-11).toFixed(1)}" width="30" height="22" rx="8" fill="#5a2c16" transform="rotate(${(r()*90)|0} ${x.toFixed(1)} ${y.toFixed(1)})"/><circle cx="${(x-3).toFixed(1)}" cy="${(y-2).toFixed(1)}" r="2.6" fill="#e0452e"/>`})+sc(5,()=>{const[x,y]=pt(150,150,70);return`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="9" fill="#2e7a2a"/>`})+sc(4,()=>{const[x,y]=pt(150,150,66);return`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="10" fill="none" stroke="#a455a8" stroke-width="3.5"/>`})}
+  return `<svg viewBox="0 0 300 300" role="img" aria-label="${esc(type)} illustration"><defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${bg[0]}"/><stop offset="1" stop-color="${bg[1]}"/></linearGradient></defs><rect width="300" height="300" fill="url(#${id})"/>${g}</svg>`;
+}
+const BG={g:['#245a42','#10281d'],r:['#7a2d1d','#2a0f0a'],y:['#6b5217','#241b06'],p:['#4a2c52','#170d1c'],b:['#1f4a5c','#0b1b22']};
+
+/* ---------- menu data ---------- */
+const MENU=[
+ {id:1,n:'Party Jollof and Grilled Chicken',c:'Mains',p:6500,d:'Smoky party jollof, a charred chicken leg and sweet dodo.',t:'jollof',bg:'r',hot:1,sp:1},
+ {id:2,n:'Egusi and Pounded Yam',c:'Mains',p:7500,d:'Melon-seed stew with goat and stockfish, soft pounded yam.',t:'egusi',bg:'g'},
+ {id:3,n:'Ofada Rice and Ayamase',c:'Mains',p:7000,d:'Local rice with green pepper stew, assorted meats.',t:'meat',bg:'g',hot:1},
+ {id:4,n:'Efo Riro and Fish',c:'Mains',p:7200,d:'Spinach stew with smoked fish and locust beans.',t:'egusi',bg:'y'},
+ {id:5,n:'Native Jollof with Plantain',c:'Mains',p:4800,d:'Meat-free jollof cooked in palm oil, served with dodo.',t:'jollof',bg:'y',veg:1},
+ {id:6,n:'Beef Suya Platter',c:'Grills',p:5500,d:'Thin-sliced beef, yaji spice, onions and tomatoes.',t:'suya',bg:'r',hot:1,sp:1},
+ {id:7,n:'Grilled Croaker',c:'Grills',p:9500,d:'Whole croaker, pepper marinade, lemon and onions.',t:'fish',bg:'b'},
+ {id:8,n:'Asun (Peppered Goat)',c:'Grills',p:6000,d:'Smoked goat chopped in fiery pepper sauce.',t:'meat',bg:'r',hot:1},
+ {id:9,n:'Peppered Gizzard',c:'Grills',p:3500,d:'Chicken gizzard sautéed in onions and pepper.',t:'meat',bg:'y',hot:1},
+ {id:10,n:'Goat Meat Pepper Soup',c:'Soups',p:5000,d:'Clear aromatic broth with uziza and scent leaf.',t:'pepper',bg:'r',hot:1,sp:1},
+ {id:11,n:'Catfish Pepper Soup',c:'Soups',p:6500,d:'Fresh catfish steeped in peppery broth.',t:'pepper',bg:'b',hot:1},
+ {id:12,n:'Fried Plantain (Dodo)',c:'Sides',p:1800,d:'Ripe plantain, fried until the edges caramelise.',t:'plantain',bg:'y',veg:1},
+ {id:13,n:'Moi Moi',c:'Sides',p:1500,d:'Steamed bean pudding with egg and fish.',t:'moi',bg:'g'},
+ {id:14,n:'Fried Yam and Pepper Sauce',c:'Sides',p:2500,d:'Crisp-edged yam with a hot tomato dip.',t:'friedyam',bg:'y',veg:1,hot:1},
+ {id:15,n:'Puff-Puff',c:'Sweet',p:2000,d:'Warm fried dough balls dusted with sugar.',t:'puff',bg:'p',veg:1},
+ {id:16,n:'Chin Chin',c:'Sweet',p:1500,d:'Crunchy, buttery, nutmeg-scented bites.',t:'chinchin',bg:'p',veg:1},
+ {id:17,n:'Zobo',c:'Drinks',p:1200,d:'Chilled hibiscus drink with ginger and pineapple.',t:'zobo',bg:'r',veg:1},
+ {id:18,n:'Chapman',c:'Drinks',p:2500,d:'The classic: grenadine, orange, cucumber and bitters.',t:'chapman',bg:'r',veg:1}
+];
+const CATS=['All','Mains','Grills','Soups','Sides','Sweet','Drinks'];
+const byId=id=>MENU.find(m=>m.id===id);
+const img=(m,s)=>slot('dish-'+n2(m.id),dish(m.t,m.id*3+(s||0),BG[m.bg]),m.n);
+
+/* ---------- state ---------- */
+const ZONES=[['Lekki Phase 1',1500,'25–35 min'],['Victoria Island',2000,'30–40 min'],['Ikoyi',2000,'30–45 min'],['Ajah',2500,'40–55 min'],['Yaba and Surulere',3500,'50–70 min']];
+let cart={},cat='All',diet={veg:false,mild:false},ot='delivery',guests=2;
+try{const c=JSON.parse(localStorage.getItem('ibk-cart')||'{}');for(const k in c)if(byId(+k)&&c[k]>0)cart[k]=c[k]}catch(e){}
+const save=()=>{try{localStorage.setItem('ibk-cart',JSON.stringify(cart))}catch(e){}};
+const count=()=>Object.values(cart).reduce((a,b)=>a+b,0);
+const sub=()=>Object.entries(cart).reduce((a,[k,q])=>a+byId(+k).p*q,0);
+function toast(t){const e=document.createElement('div');e.className='toast';e.textContent=t;e.setAttribute('role','status');document.body.appendChild(e);setTimeout(()=>e.remove(),1800)}
+
+/* ---------- render ---------- */
+function card(m){
+  const q=cart[m.id]||0;
+  return `<article class="card"><div class="img">${img(m)}</div><div class="body"><div class="row"><h3>${esc(m.n)}</h3></div><p class="muted" style="font-size:.92rem">${esc(m.d)}</p><div class="tags">${m.veg?'<span class="badge veg">Veg</span>':''}${m.hot?'<span class="badge hot">Hot</span>':''}${m.sp?'<span class="badge">Special</span>':''}</div><div class="row"><span class="price">${fmt(m.p)}</span>${q?`<div class="qty"><button data-dec="${m.id}" aria-label="Remove one ${esc(m.n)}">−</button><span>${q}</span><button data-inc="${m.id}" aria-label="Add one ${esc(m.n)}">+</button></div>`:`<button class="add" data-inc="${m.id}">Add</button>`}</div></div></article>`;
+}
+function renderMenu(){
+  const q=$('#q').value.trim().toLowerCase();
+  const list=MENU.filter(m=>(cat==='All'||m.c===cat)&&(!diet.veg||m.veg)&&(!diet.mild||!m.hot)&&(!q||(m.n+' '+m.d+' '+m.c).toLowerCase().includes(q)));
+  $('#menuGrid').innerHTML=list.map(card).join('');
+  $('#menuEmpty').hidden=list.length>0;
+  $('#tabs').innerHTML=CATS.map(c=>`<button class="tab" data-cat="${c}" aria-pressed="${c===cat}">${c}</button>`).join('');
+  $$('[data-diet]').forEach(b=>b.setAttribute('aria-pressed',diet[b.dataset.diet]));
+}
+function renderSpecials(){$('#specials').innerHTML=MENU.filter(m=>m.sp).map(card).join('')}
+function renderHero(){$('#heroPlate').innerHTML=`<div class="d d1">${slot('hero-1',dish('jollof',5,BG.r),'Party jollof rice')}</div><div class="d d2">${slot('hero-2',dish('suya',9,BG.y),'Beef suya')}</div><div class="d d3">${slot('hero-3',dish('puff',3,BG.p),'Puff-puff')}</div>`}
+function renderMosaic(){const ids=[1,6,10,15,2,7,17,12];$('#mosaic').innerHTML=ids.map(i=>{const m=byId(i);return `<div class="m">${slot('dish-'+n2(m.id),dish(m.t,i*11,BG[m.bg]),m.n)}<span>${esc(m.n.split(' and ')[0])}</span></div>`}).join('')}
+function renderCartUI(){
+  const n=count();
+  const b=$('#badge');b.hidden=!n;b.textContent=n;
+  const onOrder=!$('[data-page="order"]').hidden;
+  const f=$('#floatCart');f.hidden=!n||onOrder;$('#fcN').textContent=n+(n===1?' item':' items');$('#fcT').textContent=fmt(sub());
+  const entries=Object.entries(cart).map(([k,q])=>[byId(+k),q]);
+  $('#lines').innerHTML=entries.length?entries.map(([m,q])=>`<div class="line"><div class="th">${img(m)}</div><div><b>${esc(m.n)}</b><small>${fmt(m.p)} each</small></div><div class="qty"><button data-dec="${m.id}" aria-label="Remove one">−</button><span>${q}</span><button data-inc="${m.id}" aria-label="Add one">+</button></div></div>`).join(''):'<p class="muted">Your order is empty. Add something from the menu.</p>';
+  const s=sub(),fee=ot==='delivery'&&s?zoneFee():0;
+  $('#sum').innerHTML=`<div><span>Subtotal</span><span>${fmt(s)}</span></div><div><span>${ot==='delivery'?'Delivery':'Pickup'}</span><span>${fee?fmt(fee):'Free'}</span></div><div class="t"><span>Total</span><span>${fmt(s+fee)}</span></div>`;
+  $('#addrL').hidden=ot!=='delivery';$('#zoneL').hidden=ot!=='delivery';
+  $$('[data-ot]').forEach(x=>x.setAttribute('aria-pressed',x.dataset.ot===ot));
+}
+const zoneFee=()=>ZONES[+($('#oZone').value||0)][1];
+function refresh(){renderMenu();renderSpecials();renderCartUI();save()}
+function setQty(id,d){const q=Math.max(0,(cart[id]||0)+d);q?cart[id]=q:delete cart[id];refresh()}
+
+/* ---------- hours + reserve ---------- */
+const HOURS=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const OPEN=['11:00 – 21:00','11:00 – 22:00','11:00 – 22:00','11:00 – 22:00','11:00 – 22:00','11:00 – 23:00','11:00 – 23:00'];
+function renderHours(){const t=new Date().getDay();$('#hours').innerHTML=[1,2,3,4,5,6,0].map(i=>`<tr class="${i===t?'today':''}"><td>${HOURS[i]}${i===t?' (today)':''}</td><td>${OPEN[i]}</td></tr>`).join('')}
+function initRes(){
+  const el=$('#rDate'),t=new Date(),p=n=>String(n).padStart(2,'0'),f=d=>`${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}`;
+  el.min=f(t);const mx=new Date(t);mx.setDate(mx.getDate()+90);el.max=f(mx);
+  const times=[];for(let h=12;h<=21;h++){times.push(h+':00',h+':30')}
+  $('#rTime').innerHTML=times.map(x=>{const[h,m]=x.split(':');const hh=+h;return`<option>${hh>12?hh-12:hh}:${m} ${hh>=12?'pm':'am'}</option>`}).join('');
+  guestUI();
+}
+function guestUI(){$('#gNum').textContent=guests;$('#gNote').textContent=guests>=9?'Please call us for groups this size.':guests+(guests===1?' guest':' guests')}
+
+/* ---------- nav ---------- */
+const PAGES=$$('.page').map(p=>p.dataset.page);
+function go(p,push=true){
+  if(!PAGES.includes(p))p='home';
+  $$('.page').forEach(s=>s.hidden=s.dataset.page!==p);
+  $$('.drawer a').forEach(a=>{a.dataset.go===p?a.setAttribute('aria-current','page'):a.removeAttribute('aria-current')});
+  closeMenu();window.scrollTo(0,0);renderCartUI();
+  if(push&&location.hash!=='#'+p)try{history.replaceState(null,'','#'+p)}catch(e){};
+}
+function openMenu(){$('#menu').classList.add('open');$('#scrim').hidden=false;$('#burger').setAttribute('aria-expanded','true');$('#burger').setAttribute('aria-label','Close menu')}
+function closeMenu(){$('#menu').classList.remove('open');$('#scrim').hidden=true;$('#burger').setAttribute('aria-expanded','false');$('#burger').setAttribute('aria-label','Open menu')}
+$('#burger').onclick=()=>$('#menu').classList.contains('open')?closeMenu():openMenu();
+$('#scrim').onclick=closeMenu;
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeMenu()});
+window.addEventListener('hashchange',()=>go(location.hash.slice(1),false));
+
+document.addEventListener('click',e=>{
+  const g=e.target.closest('[data-go]');if(g){e.preventDefault();go(g.dataset.go);return}
+  const i=e.target.closest('[data-inc]');if(i){const m=byId(+i.dataset.inc);if(!cart[m.id])toast(m.n+' added');setQty(m.id,1);return}
+  const d=e.target.closest('[data-dec]');if(d){setQty(+d.dataset.dec,-1);return}
+  const c=e.target.closest('[data-cat]');if(c){cat=c.dataset.cat;renderMenu();return}
+  const df=e.target.closest('[data-diet]');if(df){diet[df.dataset.diet]=!diet[df.dataset.diet];renderMenu();return}
+  const o=e.target.closest('[data-ot]');if(o){ot=o.dataset.ot;renderCartUI();return}
+  const cp=e.target.closest('[data-copy]');if(cp){const t=cp.dataset.copy;(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>toast('Copied')).catch(()=>toast(t))}
+});
+$('#q').addEventListener('input',renderMenu);
+$('#gMinus').onclick=()=>{guests=Math.max(1,guests-1);guestUI()};
+$('#gPlus').onclick=()=>{guests=Math.min(12,guests+1);guestUI()};
+
+/* ---------- forms ---------- */
+const phoneOk=v=>/^[+\d][\d\s()-]{7,}$/.test(v);
+$('#orderForm').addEventListener('submit',e=>{
+  e.preventDefault();
+  const name=$('#oName').value.trim(),phone=$('#oPhone').value.trim(),addr=$('#oAddr').value.trim();
+  const er={eoCart:count()?'':'Your order is empty. Add something from the menu.',eoName:name.length>=2?'':'Enter your name.',eoPhone:phoneOk(phone)?'':'Enter a valid phone number.',eoAddr:ot==='pickup'||addr.length>=6?'':'Enter your delivery address.'};
+  let bad=null;for(const k in er){$('#'+k).textContent=er[k];if(er[k]&&!bad)bad=k}
+  if(bad){$('#'+bad).scrollIntoView({block:'center',behavior:'smooth'});return}
+  const s=sub(),zn=ZONES[+$('#oZone').value||0],fee=ot==='delivery'?zn[1]:0,no='IB-'+Math.floor(1000+Math.random()*9000);
+  const items=Object.entries(cart).map(([k,q])=>q+' × '+byId(+k).n);
+  $('#orderArea').innerHTML=`<div class="confirm" role="status"><span class="eyebrow">Order placed</span><div class="ref">${no}</div><p>Thank you, <b>${esc(name)}</b>. ${ot==='delivery'?'Your food arrives in about '+zn[2]+' at '+esc(addr)+', '+zn[0]+'.':'Your food is ready for pickup in about 25 minutes.'}</p><ul style="margin:0;padding-left:1.1rem">${items.map(x=>`<li>${esc(x)}</li>`).join('')}</ul><p>Total: <b>${fmt(s+fee)}</b> · ${esc($('#oPay').value)}</p><p class="muted">Portfolio demo: no order was actually sent.</p><div><button class="btn" id="newOrder">Start a new order</button></div></div>`;
+  cart={};save();renderMenu();renderSpecials();renderCartUI();$('#newOrder').onclick=()=>location.reload();window.scrollTo(0,0);
+});
+$('#resForm').addEventListener('submit',e=>{
+  e.preventDefault();
+  const d=$('#rDate').value,n=$('#rName').value.trim(),p=$('#rPhone').value.trim();
+  const er={erDate:d?'':'Choose a date.',erName:n.length>=2?'':'Enter your name.',erPhone:phoneOk(p)?'':'Enter a valid phone number.'};
+  let bad=null;for(const k in er){$('#'+k).textContent=er[k];if(er[k]&&!bad)bad=k}
+  if(bad){$('#'+bad).scrollIntoView({block:'center',behavior:'smooth'});return}
+  const nice=new Date(d+'T12:00:00').toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'});
+  $('#resArea').innerHTML=`<div class="confirm" role="status"><span class="eyebrow">Table reserved</span><div class="ref">TB-${Math.floor(100+Math.random()*900)}</div><p><b>${esc(n)}</b>, a table for <b>${guests}</b> on <b>${nice}</b> at <b>${esc($('#rTime').value)}</b>. Occasion: ${esc($('#rOcc').value)}.</p><p class="muted">We will text ${esc(p)} a reminder. Portfolio demo: nothing was sent.</p><div><button class="btn ghost" id="again">Book another</button></div></div>`;
+  $('#again').onclick=()=>location.reload();
+});
+$('#msgForm').addEventListener('submit',e=>{
+  e.preventDefault();
+  if($('#mName').value.trim().length<2||$('#mText').value.trim().length<8){$('#eMsg').textContent='Add your name and a few details.';return}
+  $('#eMsg').textContent='';e.target.reset();toast('Enquiry sent (demo)');
+});
+
+$('#oZone').innerHTML=ZONES.map((z,i)=>`<option value="${i}">${z[0]} · ${fmt(z[1])}</option>`).join('');$('#oZone').addEventListener('change',renderCartUI);
+renderHero();renderMosaic();renderHours();initRes();refresh();
+go(location.hash.slice(1)||'home',false);
+</script>
