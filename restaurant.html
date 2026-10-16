@@ -1,3 +1,8 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Iya Bisi Kitchen</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -139,6 +144,8 @@ footer{border-top:1px solid var(--line);padding-block:1.5rem 2.4rem;color:var(--
 .tier{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:1.2rem;display:grid;gap:.5rem;align-content:start}
 .tier ul{margin:0;padding-left:1.1rem;color:var(--muted);font-size:.92rem}
 </style>
+</head>
+<body>
 
 <header class="bar"><div class="wrap">
   <button class="brand" data-go="home" aria-label="Iya Bisi Kitchen, home">
@@ -512,3 +519,5 @@ $('#oZone').innerHTML=ZONES.map((z,i)=>`<option value="${i}">${z[0]} · ${fmt(z[
 renderHero();renderMosaic();renderHours();initRes();refresh();
 go(location.hash.slice(1)||'home',false);
 </script>
+</body>
+</html>

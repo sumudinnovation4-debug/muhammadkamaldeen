@@ -1,3 +1,8 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Ironwell Fitness</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -149,6 +154,8 @@ summary::after{content:"+";color:var(--blue);font-size:1.5rem;line-height:1}
 details[open] summary::after{content:"–"}
 details p{margin-top:.5rem;color:var(--muted)}
 </style>
+</head>
+<body>
 
 <header class="bar"><div class="wrap">
   <button class="brand" data-go="home" aria-label="Ironwell Fitness, home">
@@ -487,3 +494,5 @@ $('#msgForm').addEventListener('submit',e=>{
 renderHome();renderClasses();renderPlans();renderTrainers();renderHours();calc();
 go(location.hash.slice(1)||'home',false);
 </script>
+</body>
+</html>

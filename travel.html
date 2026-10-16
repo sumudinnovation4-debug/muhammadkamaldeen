@@ -1,3 +1,8 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Kora Voyages</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -148,6 +153,8 @@ footer{border-top:1px solid var(--line);padding-block:1.4rem 2.4rem;color:var(--
 .alert input{background:#fff}
 .alert .row2{display:flex;gap:.6rem;flex-wrap:wrap}.alert .row2 input{flex:1;min-width:200px}
 </style>
+</head>
+<body>
 
 <header class="bar"><div class="wrap">
   <button class="brand" data-go="home" aria-label="Kora Voyages, home">
@@ -471,3 +478,5 @@ $('#alertForm').addEventListener('submit',e=>{e.preventDefault();const v=$('#aEm
 renderHome();renderDest();renderDeals();renderFaq();renderHours();renderSaved();renderPlan();
 go(location.hash.slice(1)||'home',false);
 </script>
+</body>
+</html>
