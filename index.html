@@ -3,13 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Kamaldeen Muhammad | Full-Stack Software Engineer</title>
-<meta name="description" content="Kamaldeen Muhammad is a full-stack software engineer and UI/UX designer based in Nigeria (UTC+1), open to UK opportunities and remote work.">
-<meta property="og:title" content="Kamaldeen Muhammad | Full-Stack Software Engineer">
-<meta property="og:description" content="Full-stack developer building fast, scalable web products with strong UX. Open to UK opportunities.">
+<title>Kamaldeen Muhammad | Software Engineer</title>
+<meta name="description" content="Kamaldeen Muhammad is a software engineer, web and app developer and UI/UX designer in Nigeria, available for remote work worldwide.">
+<meta property="og:title" content="Kamaldeen Muhammad | Software Engineer">
+<meta property="og:description" content="Full-stack developer building fast, scalable web products with strong UX. Available for remote work.">
 <meta property="og:type" content="website">
-<link rel="icon" type="image/png" href="logo.png">
-<link rel="apple-touch-icon" href="logo.png">
+<link rel="icon" href="logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600&family=JetBrains+Mono:wght@500&family=Schibsted+Grotesk:wght@600;800&display=swap">
@@ -18,16 +17,16 @@
    Light by default with a dark mode. Emerald is the single accent. Projects open as case studies in a dialog. */
 :root{
   --bg:#f5f7f6; --surface:#ffffff; --surface2:#e9efec; --ink:#0d1f1a; --muted:#566862;
-  --accent:#0a7d52; --accent-fg:#ffffff; --accent-soft:#d9f2e6; --line:#d6dfdb; --gold:#e8a817;
+  --inv:0; --accent:#0a7d52; --accent-fg:#ffffff; --accent-soft:#d9f2e6; --line:#d6dfdb; --gold:#e8a817;
   --disp:'Schibsted Grotesk','Helvetica Neue',Arial,sans-serif; --body:'Figtree','Helvetica Neue',Arial,sans-serif; --mono:'JetBrains Mono',ui-monospace,Menlo,monospace;
   color-scheme:light;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
   --bg:#09110f; --surface:#101b17; --surface2:#17261f; --ink:#e8f2ed; --muted:#8fa49b;
-  --accent:#3ddc97; --accent-fg:#05140d; --accent-soft:#12332a; --line:#213630; --gold:#f2c14e; color-scheme:dark}}
+  --accent:#3ddc97; --accent-fg:#05140d; --accent-soft:#12332a; --line:#213630; --gold:#f2c14e; --inv:1; color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#09110f; --surface:#101b17; --surface2:#17261f; --ink:#e8f2ed; --muted:#8fa49b;
-  --accent:#3ddc97; --accent-fg:#05140d; --accent-soft:#12332a; --line:#213630; --gold:#f2c14e; color-scheme:dark}
+  --accent:#3ddc97; --accent-fg:#05140d; --accent-soft:#12332a; --line:#213630; --gold:#f2c14e; --inv:1; color-scheme:dark}
 *{box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:84px}
 body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.6 var(--body);
@@ -55,6 +54,9 @@ button{font:inherit;color:inherit;cursor:pointer}
 .bar .wrap{display:flex;align-items:center;gap:.6rem}
 .logo{font:800 1.5rem/1 var(--disp);text-decoration:none;margin-right:auto;letter-spacing:-.03em}
 .logo i{color:var(--accent);font-style:normal}
+.logo{display:inline-flex;align-items:center}
+.logo .lg{height:36px;width:auto;max-width:150px;object-fit:contain;display:block}
+.logo.has-img .lt{display:none}
 .links{display:none;gap:.2rem}
 .links a{padding:.45rem .75rem;border-radius:8px;text-decoration:none;font-weight:500;font-size:.95rem;color:var(--muted)}
 .links a:hover,.links a[aria-current="true"]{color:var(--ink);background:var(--surface2)}
@@ -116,7 +118,10 @@ section{padding-block:4.5rem 0}
 .tab[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 .chips{display:grid;gap:.8rem;grid-template-columns:repeat(auto-fill,minmax(min(100%,150px),1fr))}
 .chip{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:.9rem 1rem;display:flex;align-items:center;gap:.7rem;font-weight:600}
-.chip .m{width:34px;height:34px;border-radius:9px;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;font:700 .8rem var(--mono)}
+.chip .m{width:40px;height:40px;flex:none;border-radius:10px;background:var(--surface2);color:var(--accent);display:grid;place-items:center;font:700 .8rem var(--mono)}
+.chip .m img{width:26px;height:26px;display:block}
+.chip .m img.inv{filter:invert(var(--inv))}
+.chip .m svg{width:26px;height:26px}
 
 /* services */
 .cards{display:grid;gap:1rem;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr))}
@@ -185,49 +190,12 @@ textarea{min-height:130px;resize:vertical}
 footer{margin-top:5rem;border-top:1px solid var(--line);padding-block:1.6rem 2.4rem;display:flex;gap:1rem;flex-wrap:wrap;justify-content:space-between;align-items:center;color:var(--muted);font-size:.92rem}
 footer nav{display:flex;gap:1.2rem}
 .toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 18px);transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:.7rem 1.1rem;border-radius:999px;font-weight:600;z-index:90;max-width:90vw}
-
-/* ===== polish ===== */
-.logo{display:inline-flex;align-items:center}
-.logoimg{height:38px;width:auto;max-width:160px;object-fit:contain;display:block;border-radius:8px}
-footer .logoimg{height:30px}
-.logo .lt{font:800 1.5rem/1 var(--disp);letter-spacing:-.03em}
-.eyebrow::before{content:"";display:inline-block;width:22px;height:2px;background:var(--accent);vertical-align:middle;margin-right:.6rem}
-.hero{position:relative;isolation:isolate}
-.hero::before{content:"";position:absolute;inset:-40px 0 auto 0;height:560px;z-index:-1;pointer-events:none;
-  background:radial-gradient(40% 50% at 15% 30%,color-mix(in srgb,var(--accent) 16%,transparent),transparent 70%),radial-gradient(35% 45% at 90% 15%,color-mix(in srgb,var(--gold) 13%,transparent),transparent 70%)}
-.hero h1 span{background:linear-gradient(90deg,var(--accent),color-mix(in srgb,var(--accent) 50%,var(--gold)));-webkit-background-clip:text;background-clip:text;color:transparent}
-.tz{font-size:.92rem}
-.hlinks{display:flex;gap:.5rem;flex-wrap:wrap}.hlinks:empty{display:none}
-.hlinks a{border:1px solid var(--line);background:var(--surface);padding:.4rem .95rem;border-radius:999px;text-decoration:none;font-weight:500;font-size:.9rem}
-.hlinks a:hover{border-color:var(--accent);color:var(--accent)}
-.btn{box-shadow:0 10px 22px -10px color-mix(in srgb,var(--accent) 70%,transparent);transition:transform .15s,box-shadow .2s,border-color .2s}
-.btn:hover{transform:translateY(-2px)}.btn.ghost{box-shadow:none}
-.tab{min-height:40px}
-.card,.proj,.chip{box-shadow:0 1px 2px rgba(13,31,26,.05)}
-.card:hover,.proj:hover{box-shadow:0 18px 36px -16px color-mix(in srgb,var(--accent) 45%,transparent)}
-.frame{box-shadow:0 30px 60px -30px color-mix(in srgb,var(--accent) 55%,transparent)}
-/* browser-style screenshot frame */
-.proj .shot,dialog .shot{aspect-ratio:auto;display:block;position:relative;overflow:hidden;background:var(--surface2)}
-.chrome{display:flex;align-items:center;gap:6px;padding:.5rem .8rem;background:var(--surface2);border-bottom:1px solid var(--line)}
-.chrome i{width:9px;height:9px;border-radius:50%;display:block;background:#ff5f57}
-.chrome i:nth-child(2){background:#febc2e}.chrome i:nth-child(3){background:#28c840}
-.chrome span{margin-left:.5rem;flex:1;min-width:0;font:500 .7rem var(--mono);color:var(--muted);background:var(--bg);border-radius:6px;padding:.22rem .6rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.shot .view{aspect-ratio:16/10;position:relative;display:grid;place-items:center;overflow:hidden}
-dialog .shot .view{aspect-ratio:16/9}
-.shot .view img{object-position:top}
-.proj .shot .tagline{top:2.9rem}
-dialog .close{top:.45rem;right:.6rem;width:34px;height:34px}
-/* scroll reveal */
-.rv{opacity:0;translate:0 18px;transition:opacity .6s ease,translate .6s ease,transform .2s,border-color .2s,box-shadow .2s}
-.rv.in{opacity:1;translate:0 0}
-.chip .m{width:40px;height:40px;border-radius:10px;background:#fff;border:1px solid var(--line);color:#0a7d52;flex:none}
-.chip .m img{width:24px;height:24px;display:block}
 </style>
 </head>
 <body>
 
 <header class="bar"><div class="wrap">
-  <a class="logo" href="#home" aria-label="Kamaldeen Muhammad, home"><img src="logo.png" alt="" class="logoimg" width="40" height="40" data-q='["logo.jpg","logo.jpeg","logo.webp","logo.svg","logo.PNG","logo.JPG"]' onerror="lg(this)"></a>
+  <a class="logo" href="#home" aria-label="Kamaldeen Muhammad, home"><img class="lg" src="logo.png" alt="" onload="this.parentNode.classList.add('has-img')" onerror="this.remove()"><span class="lt">KM<i>.</i></span></a>
   <nav class="links" id="links" aria-label="Sections"></nav>
   <a class="btn sm cta-top" href="#contact">Hire me</a>
   <button class="iconbtn" id="theme" aria-label="Switch colour theme"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg></button>
@@ -241,18 +209,16 @@ dialog .close{top:.45rem;right:.6rem;width:34px;height:34px}
 
 <section id="home" class="hero" style="padding-top:2.4rem">
   <div class="copy">
-    <span class="badge">Open to UK opportunities</span>
+    <span class="badge">Available for work</span>
     <h1>Hi, I’m <span>Kamaldeen Muhammad.</span></h1>
-    <p class="muted" style="font-size:1.12rem">Full-stack software engineer and UI/UX designer. I build fast, scalable web products with strong UX for clients across several countries, working remotely from Nigeria.</p>
+    <p class="muted" style="font-size:1.12rem">Software engineer, web and app developer and UI/UX designer. I build scalable web products with strong UX for clients across several countries, remotely from Nigeria.</p>
     <div class="cta"><a class="btn" href="#contact">Let’s talk</a><a class="btn ghost" href="#projects">View work</a><a class="btn ghost" id="cv" href="#" hidden>Download CV</a></div>
     <div class="stats"><div><b>3+</b><span>Years experience</span></div><div><b>20+</b><span>Projects</span></div><div><b>10+</b><span>Clients</span></div></div>
-    <p class="tz muted">Based in Nigeria (WAT, UTC+1), within one hour of UK time all year round.</p>
-    <div class="hlinks" id="heroLinks"></div>
   </div>
   <div class="portrait">
     <div class="frame"><span class="ini">KM</span><img src="prof-2.png" alt="Portrait of Kamaldeen Muhammad" onerror="this.remove()"></div>
     <div class="float a"><b>On time</b><span>Delivery record</span></div>
-    <div class="float b"><b>UTC+1</b><span>UK-friendly hours</span></div>
+    <div class="float b"><b>5.0 ★★★★★</b><span>Client rating</span></div>
   </div>
 </section>
 
@@ -267,8 +233,7 @@ dialog .close{top:.45rem;right:.6rem;width:34px;height:34px}
     <div class="facts">
       <div><span>Location</span><b>Nigeria · remote worldwide</b></div>
       <div id="factEmail" hidden><span>Email</span><b id="factEmailV"></b></div>
-      <div><span>Availability</span><b>Open to UK roles</b></div>
-      <div><span>Time zone</span><b>WAT, UTC+1 · near UK hours</b></div>
+      <div><span>Availability</span><b>Open to work</b></div>
       <div><span>Experience</span><b>3+ years</b></div>
       <div><span>Focus</span><b>Web apps, e-commerce, UI/UX</b></div>
     </div>
@@ -330,13 +295,13 @@ dialog .close{top:.45rem;right:.6rem;width:34px;height:34px}
       </div>
       <label for="fSub">Subject<input id="fSub" placeholder="New website, redesign, CBT platform…"></label>
       <label for="fMsg">Message<textarea id="fMsg"></textarea><span class="err" id="eMsg"></span></label>
-      <div class="two"><button class="btn" type="submit">Send via WhatsApp</button><button class="btn ghost" type="button" id="mailBtn" hidden>Send via email</button></div>
-      <p class="muted" style="font-size:.85rem">Opens WhatsApp (or your email app) with your message ready to send.</p>
+      <button class="btn" type="submit">Send via WhatsApp</button>
+      <p class="muted" style="font-size:.85rem">This opens WhatsApp with your message ready to send.</p>
     </form>
   </div>
 </section>
 
-<footer><a class="logo" href="#home" style="margin:0" aria-label="Back to top"><img src="logo.png" alt="" class="logoimg" width="40" height="40" data-q='["logo.jpg","logo.jpeg","logo.webp","logo.svg","logo.PNG","logo.JPG"]' onerror="lg(this)"></a><span>© 2026 Kamaldeen Muhammad. All rights reserved.</span><nav><a href="#home">Home</a><a href="#projects">Work</a><a href="#contact">Contact</a></nav></footer>
+<footer><a class="logo" href="#home" style="margin:0" aria-label="Kamaldeen Muhammad, home"><img class="lg" src="logo.png" alt="" onload="this.parentNode.classList.add('has-img')" onerror="this.remove()"><span class="lt">KM<i>.</i></span></a><span>© 2026 Kamaldeen Muhammad. All rights reserved.</span><nav><a href="#home">Home</a><a href="#projects">Work</a><a href="#contact">Contact</a></nav></footer>
 </main>
 
 <dialog id="dlg" aria-label="Project case study"></dialog>
@@ -344,47 +309,69 @@ dialog .close{top:.45rem;right:.6rem;width:34px;height:34px}
 <script>
 /* ===== EDIT HERE ===== */
 const CONFIG={
-  email:'kamaldeenmuhammad11@gmail.com',                 // ADD YOUR EMAIL: UK recruiters expect one. Shows in the hero, About and Contact
-  whatsapp:'2349134487573', // digits only, with country code
-  cv:'CV.pdf',              // path to your CV; set to '' to hide the button
-  linkedin:'', github:'',      // full profile URLs, e.g. https://www.linkedin.com/in/yourname
-  instagram:'https://www.instagram.com/_oloye_11', facebook:'https://www.facebook.com/share/1KQ6aE6n68/' // full profile URLs; empty ones are hidden
+  email:'kamaldeenmuhammad11@gmail.com',
+  whatsapp:'2349144487573', // digits only, with country code
+  cv:'cv.pdf',              // path to your CV; set to '' to hide the button
+  instagram:'https://www.instagram.com/_oloye_11',
+  facebook:'https://www.facebook.com/share/19fnMazPUF/',
+  x:'https://x.com/_oloye_11'
 };
 const U=id=>`https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=1200&q=75`;
 const PROJECTS=[
- {id:'salon',t:'Halo & Blade Studio',cat:'Business sites',tag:'Beauty and grooming',c:['#2a2418','#c9a15b'],img:'shots/salon.jpg',fb:U('1648221122323-572c13a31663'),link:'salon.html',
-  sum:'A salon website with a Him/Her switch that re-themes the whole site, live booking slots and a filterable style gallery.',
+ {id:'smartskills',t:'Smartskills Media',cat:'Client work',tag:'Digital agency',c:['#14213d','#fca311'],img:'smartskills.jpg',shot:'https://smartskillsmedia.com',link:'https://smartskillsmedia.com',
+  sum:'Website for a Nigerian digital advertising and creative media agency that also sells digital marketing training.',
+  role:'Web development',
+  feats:['Home page with hero, client logo grid, service cards, stats counters and a testimonial carousel','Dedicated pages for About, Services, Pricing, Training and Contact','Six service offers: Meta Ads, Google Ads, TikTok Ads, video production, social media management and training','WhatsApp consultation link and a Get Started link that sends students to the Selar course store','Responsive layout built with Elementor'],
+  stack:['WordPress','Elementor','Selar','WhatsApp']},
+ {id:'glcgf',t:'GLC Global Foundation',cat:'Client work',tag:'Non-profit',c:['#0b3b2e','#e8c872'],img:'glcgf.jpg',shot:'https://glcgfoundation.org',link:'https://glcgfoundation.org',
+  sum:'Multi-page website for a humanitarian foundation in Keffi, Nasarawa State, covering education, health and community work.',
   role:'Design and development',
+  feats:['Seven pages: Home, About, Programmes, Updates, Gallery, Contact and Donate','Six programme areas, impact counters and an events and updates section','Donation and sponsor-a-child calls to action, plus a volunteer sign-up route','Accessible build with skip link, Open Graph tags and tap-to-call phone links','Built as fast static HTML with no framework'],
+  stack:['HTML5','CSS3','JavaScript']},
+ {id:'femi',t:'Femi Couture',cat:'E-commerce',tag:'Fashion',c:['#2b1b2e','#d9a45b'],img:'femi.jpg',shot:'https://femicoiture.vercel.app',link:'https://femicoiture.vercel.app',
+  sum:'A luxury fashion house website with e-commerce.',role:'Design and development',feats:[],stack:[]},
+ {id:'ovampa',t:'Ovampa Platform',cat:'Client work',tag:'Platform',c:['#10243a','#3aa0ff'],img:'ovampa.jpg',shot:'https://ovampa.com/new',link:'https://ovampa.com/new',
+  sum:'A full-scale platform project built for the Ovampa team.',role:'Development',feats:[],stack:[]},
+ {id:'selar',t:'Selar Store',cat:'E-commerce',tag:'Digital products',c:['#102a1d','#3ddc97'],img:'selar.jpg',shot:'https://selar.com/27e716',link:'https://selar.com/27e716',
+  sum:'A digital product store built on Selar.',role:'Store setup and design',feats:[],stack:[]},
+ {id:'salon',t:'Halo & Blade Studio',cat:'Concept builds',tag:'Beauty and grooming',c:['#2a2418','#c9a15b'],img:'shot-salon.jpg',shot:'https://kamaldeen-muhammad-sage.vercel.app/salon.html',link:'salon.html',
+  sum:'Concept salon site with a Him/Her switch that re-themes the whole site, live booking slots and a filterable style gallery.',
+  role:'Design and development (concept build)',
   feats:['Black and gold men’s theme and white and pink women’s theme from one codebase','Services list with add-to-booking cart and running total','Booking form with date, stylist and time-slot picker, validation and promo code','Filterable gallery with full-screen preview','Hamburger menu moving between six pages, built mobile first'],
   stack:['HTML5','CSS3','JavaScript','SVG']},
- {id:'kitchen',t:'Iya Bisi Kitchen',cat:'Business sites',tag:'Restaurant',c:['#0f2419','#f2b632'],img:'shots/kitchen.jpg',fb:U('1665332195309-9d75071138f0'),link:'restaurant.html',
-  sum:'A Nigerian restaurant site with a searchable menu, working order cart, delivery fees by area and table reservations.',
-  role:'Design and development',
+ {id:'kitchen',t:'Iya Bisi Kitchen',cat:'Concept builds',tag:'Restaurant',c:['#0f2419','#f2b632'],img:'shot-restaurant.jpg',shot:'https://kamaldeen-muhammad-sage.vercel.app/restaurant.html',link:'restaurant.html',
+  sum:'Concept Nigerian restaurant site with a searchable menu, working order cart, delivery fees by area and table reservations.',
+  role:'Design and development (concept build)',
   feats:['Menu search with category and dietary filters','Order cart that remembers items between visits','Delivery or pickup checkout with fees by area (Lekki, VI, Ikoyi, Ajah, Yaba)','Table reservation form with guest stepper','Catering packages and customer reviews'],
   stack:['HTML5','CSS3','JavaScript','LocalStorage']},
- {id:'gym',t:'Ironwell Fitness',cat:'Business sites',tag:'Gym and fitness',c:['#11171d','#2446ff'],img:'shots/gym.jpg',fb:U('1709315847224-6c8a812e886a'),link:'gym.html',
-  sum:'A gym website with a bookable class timetable, membership plans with billing options and built-in fitness calculators.',
-  role:'Design and development',
+ {id:'gym',t:'Ironwell Fitness',cat:'Concept builds',tag:'Gym and fitness',c:['#11171d','#2446ff'],img:'shot-gym.jpg',shot:'https://kamaldeen-muhammad-sage.vercel.app/gym.html',link:'gym.html',
+  sum:'Concept gym site with a bookable class timetable, membership plans with billing options and built-in fitness calculators.',
+  role:'Design and development (concept build)',
   feats:['Weekly timetable with class booking, spot counts and a bookings list','Membership plans with monthly, 3-month and yearly pricing','BMI, daily calorie and one-rep-max calculators','Trainer profiles, member stories and FAQ','Join form with confirmation'],
   stack:['HTML5','CSS3','JavaScript']},
- {id:'travel',t:'Kora Voyages',cat:'Business sites',tag:'Travel agency',c:['#0f5c73','#ff6b4a'],img:'shots/travel.jpg',fb:U('1507525428034-b723cf961d3e'),link:'travel.html',
-  sum:'A travel agency site with filterable destinations, a live trip cost estimator and a quote request form.',
-  role:'Design and development',
+ {id:'travel',t:'Kora Voyages',cat:'Concept builds',tag:'Travel agency',c:['#0f5c73','#ff6b4a'],img:'shot-travel.jpg',shot:'https://kamaldeen-muhammad-sage.vercel.app/travel.html',link:'travel.html',
+  sum:'Concept travel agency site with filterable destinations, a live trip cost estimator and a quote request form.',
+  role:'Design and development (concept build)',
   feats:['Ten destinations filtered by region, style and budget, with saved trips','Cost estimator with breakdown chart for flights, hotel, visa and insurance','Deals page with deal-alert signup','Visa and travel FAQ','Quote request form that carries your plan across'],
-  stack:['HTML5','CSS3','JavaScript']},
- {id:'femi',t:'Femi Couture',cat:'E-commerce',tag:'Fashion',c:['#2b1b2e','#d9a45b'],img:'femi.jpg',link:'https://femicoiture.vercel.app',
-  sum:'A luxury fashion house website with e-commerce.',role:'Design and development',feats:[],stack:[]},
- {id:'ovampa',t:'Ovampa Platform',cat:'Platforms',tag:'Platform',c:['#10243a','#3aa0ff'],img:'ovampa.jpg',link:'https://ovampa.com/new',
-  sum:'A full-scale platform project built for the Ovampa team.',role:'Development',feats:[],stack:[]},
- {id:'selar',t:'Selar Store',cat:'E-commerce',tag:'Digital products',c:['#102a1d','#3ddc97'],img:'selar.jpg',link:'https://selar.com/27e716',
-  sum:'A digital product store built on Selar.',role:'Store setup and design',feats:[],stack:[]}
+  stack:['HTML5','CSS3','JavaScript']}
 ];
+
 const TESTIMONIALS=[
  /* Paste your real testimonials here, one object each, then they appear automatically.
  {q:'Their quote text',n:'Person name',r:'Role, Company'} */
 ];
 const SKILLS=[['HTML5','Frontend'],['CSS3','Frontend'],['JavaScript','Frontend'],['React','Frontend'],['Responsive design','Frontend'],['Figma','Frontend'],['Node.js','Backend'],['Express','Backend'],['MongoDB','Backend'],['Python','Backend'],['Git','Tools'],['Vercel','Tools']];
 const MONO={'HTML5':'H5','CSS3':'C3','JavaScript':'JS','React':'Re','Responsive design':'Rd','Figma':'Fg','Node.js':'No','Express':'Ex','MongoDB':'Mo','Python':'Py','Git':'Gt','Vercel':'Vc'};
+/* Official logos from the open-source Devicon set (pinned version). If one fails to load, the two-letter badge shows instead. */
+const DEV='https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/icons/';
+const LOGO={'HTML5':'html5/html5-original','CSS3':'css3/css3-original','JavaScript':'javascript/javascript-original','React':'react/react-original','Figma':'figma/figma-original','Node.js':'nodejs/nodejs-original','Express':'express/express-original','MongoDB':'mongodb/mongodb-original','Python':'python/python-original','Git':'git/git-original','Vercel':'vercel/vercel-original'};
+const DARKLOGO=['Express','Vercel'];
+const RESP='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="5" width="14" height="10" rx="1.5"/><path d="M6 19h6M9 15v4"/><rect x="15" y="9" width="7" height="11" rx="1.5"/></svg>';
+function skillIcon(n){
+  if(n==='Responsive design')return RESP;
+  const l=LOGO[n];if(!l)return esc(MONO[n]||n.slice(0,2));
+  return `<img src="${DEV}${l}.svg" class="${DARKLOGO.includes(n)?'inv':''}" alt="" loading="lazy" onerror="this.parentNode.textContent='${MONO[n]||''}'">`;
+}
 const SERVICES=[
  ['Custom web design','Brand-aligned designs built to turn visitors into customers.','<path d="M4 5h16v11H4zM8 20h8M12 16v4"/>'],
  ['Web development','Fast, responsive and accessible websites that work on every screen.','<path d="M8 7l-5 5 5 5M16 7l5 5-5 5M14 4l-4 16"/>'],
@@ -393,7 +380,6 @@ const SERVICES=[
  ['Backend systems','Scalable APIs, authentication, CBT platforms and database architecture.','<ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v6c0 1.700 3 3 7 3s7-1.300 7-3V6M5 12v6c0 1.700 3 3 7 3s7-1.300 7-3v-6"/>'],
  ['Maintenance and support','Ongoing plans that keep your site fast, secure and up to date.','<path d="M14.500 6.500a4 4 0 00-5 5L3 18l3 3 6.500-6.500a4 4 0 005-5l-2.500 2.500-2-2z"/>']];
 const FAQ=[
- ['Are you open to UK roles?','Yes. I’m open to full-time and contract roles with UK teams. I work remotely from Nigeria on West Africa Time (UTC+1), which is within one hour of UK time all year, so meetings and handovers fit normal UK working hours.'],
  ['How much does a project cost?','It depends on scope. A focused business website costs far less than a store or a custom platform. Send me a short brief and I’ll reply with a fixed quote, so you know the price before we start.'],
  ['How long does a project take?','A typical business website takes one to two weeks. E-commerce stores and custom platforms take longer, usually four to eight weeks. I’ll give you a timeline in the quote.'],
  ['Can you redesign my existing website?','Yes. I’ll review what you have, keep what works and rebuild what doesn’t, with better speed, mobile layout and clarity.'],
@@ -426,29 +412,19 @@ NAV.forEach(n=>{const s=document.getElementById(n[0]);if(s)spy.observe(s)});
 
 /* about, skills, services */
 $('#traits').innerHTML=TRAITS.map(t=>`<span class="trait">${t}</span>`).join('');
-const DEV='https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/icons/';
-const ICONS={'HTML5':'html5/html5-original','CSS3':'css3/css3-original','JavaScript':'javascript/javascript-original','React':'react/react-original','Figma':'figma/figma-original','Node.js':'nodejs/nodejs-original','Express':'express/express-original','MongoDB':'mongodb/mongodb-original','Python':'python/python-original','Git':'git/git-original','Vercel':'vercel/vercel-original'};
-const RESP='<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="14" height="10" rx="1.5"/><rect x="14" y="9" width="8" height="12" rx="1.5"/></svg>';
-function techIcon(n){const m=MONO[n]||n.slice(0,2);if(ICONS[n])return `<img src="${DEV+ICONS[n]}.svg" alt="" width="22" height="22" loading="lazy" onerror="this.replaceWith(document.createTextNode('${m}'))">`;return n==='Responsive design'?RESP:m}
 let sk='All';
 function renderSkills(){
   $('#skillTabs').innerHTML=['All','Frontend','Backend','Tools'].map(c=>`<button class="tab" data-sk="${c}" aria-pressed="${c===sk}">${c}</button>`).join('');
-  $('#chips').innerHTML=SKILLS.filter(s=>sk==='All'||s[1]===sk).map(s=>`<div class="chip"><span class="m">${techIcon(s[0])}</span>${esc(s[0])}</div>`).join('');
+  $('#chips').innerHTML=SKILLS.filter(s=>sk==='All'||s[1]===sk).map(s=>`<div class="chip"><span class="m">${skillIcon(s[0])}</span>${esc(s[0])}</div>`).join('');
 }
 $('#skillTabs').addEventListener('click',e=>{const b=e.target.closest('[data-sk]');if(b){sk=b.dataset.sk;renderSkills()}});
 $('#services').innerHTML=SERVICES.map(s=>`<article class="card"><div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${s[2]}</svg></div><h3>${s[0]}</h3><p>${s[1]}</p></article>`).join('');
 
 /* projects */
 let pf='All';
-const absUrl=l=>{try{const u=new URL(l,location.href);return /^https?:$/.test(u.protocol)&&!/^(localhost|127\.|192\.168\.|10\.)/.test(u.hostname)?u.href:''}catch(e){return ''}};
-const hostOf=p=>{const a=absUrl(p.link);try{if(a){const u=new URL(a);return u.host+u.pathname.replace(/\/$/,'')}}catch(e){}return p.link};
-/* Screenshot order: your own file first, then a live screenshot of the site, then the stock photo. */
-const shotSrcs=p=>{const a=absUrl(p.link),q=[];if(p.img)q.push(p.img);if(!/^shots\//.test(p.img||''))q.push('shots/'+p.id+'.jpg');
-  if(a){q.push('https://image.thum.io/get/width/1280/crop/800/'+a);q.push('https://s.wordpress.com/mshots/v1/'+encodeURIComponent(a)+'?w=1280&h=800')}
-  if(p.fb)q.push(p.fb);return q};
-function lg(i){let q=[];try{q=JSON.parse(i.dataset.q||'[]')}catch(e){}if(q.length){i.src=q.shift();i.dataset.q=JSON.stringify(q);return}i.replaceWith(Object.assign(document.createElement('span'),{className:'lt',innerHTML:'KM<i>.</i>'}))}
-function nx(i){let q=[];try{q=JSON.parse(i.dataset.q||'[]')}catch(e){}if(!q.length){i.remove();return}i.src=q.shift();i.dataset.q=JSON.stringify(q)}
-const shot=(p,big)=>{const q=shotSrcs(p);return `<div class="shot"><div class="chrome" aria-hidden="true"><i></i><i></i><i></i><span>${esc(hostOf(p))}</span></div><div class="view" style="background:linear-gradient(135deg,${p.c[0]},${p.c[1]})"><span class="big">${esc(p.t.split(' ').map(w=>w[0]).join('').slice(0,2))}</span>${q.length?`<img src="${esc(q[0])}" data-q="${esc(JSON.stringify(q.slice(1)))}" alt="Screenshot of ${esc(p.t)}" loading="lazy" onerror="nx(this)">`:''}</div>${big?'':`<span class="tagline">${esc(p.tag)}</span>`}</div>`};
+function imgFb(el){const fb=el.getAttribute('data-fb');if(fb){el.removeAttribute('data-fb');el.src=fb}else el.remove()}
+const shotUrl=u=>'https://image.thum.io/get/width/1200/crop/750/noanimate/'+u;
+const shot=(p,big)=>`<div class="shot" style="background:linear-gradient(135deg,${p.c[0]},${p.c[1]})"><span class="big">${esc(p.t.split(' ').map(w=>w[0]).join('').slice(0,2))}</span><img src="${p.img}" ${p.shot?`data-fb="${shotUrl(p.shot)}"`:''} alt="${esc(p.t)} preview" loading="lazy" onerror="imgFb(this)">${big?'':`<span class="tagline">${esc(p.tag)}</span>`}</div>`;
 function renderProjects(){
   const cats=['All',...new Set(PROJECTS.map(p=>p.cat))];
   $('#projTabs').innerHTML=cats.map(c=>`<button class="tab" data-pf="${esc(c)}" aria-pressed="${c===pf}">${esc(c)}</button>`).join('');
@@ -457,7 +433,7 @@ function renderProjects(){
 $('#projTabs').addEventListener('click',e=>{const b=e.target.closest('[data-pf]');if(b){pf=b.dataset.pf;renderProjects()}});
 $('#pgrid').addEventListener('click',e=>{const b=e.target.closest('[data-proj]');if(!b)return;const p=PROJECTS.find(x=>x.id===b.dataset.proj);
   const ext=/^https?:/.test(p.link);
-  $('#dlg').innerHTML=`<button class="close" aria-label="Close" id="dx">×</button>${shot(p,true)}<div class="in"><span class="eyebrow">${esc(p.cat)} · ${esc(p.tag)}</span><h2 style="font-size:2rem">${esc(p.t)}</h2><p>${esc(p.sum)}</p><div class="mono muted">My role: ${esc(p.role)}</div>${p.feats.length?`<div><h3 style="margin-bottom:.5rem">What it does</h3><ul>${p.feats.map(f=>`<li>${esc(f)}</li>`).join('')}</ul></div>`:''}${p.stack.length?`<div class="stack">${p.stack.map(s=>`<span>${esc(s)}</span>`).join('')}</div>`:''}<div class="row"><a class="btn" href="${esc(p.link)}" ${ext?'target="_blank" rel="noopener"':''}>${ext?'View live site':'Open demo'}</a><button class="btn ghost" id="dc">Close</button></div></div>`;
+  $('#dlg').innerHTML=`<button class="close" aria-label="Close" id="dx">×</button>${shot(p,true)}<div class="in"><span class="eyebrow">${esc(p.cat)} · ${esc(p.tag)}</span><h2 style="font-size:2rem">${esc(p.t)}</h2><p>${esc(p.sum)}</p><div class="mono muted">My role: ${esc(p.role)}</div>${p.feats.length?`<div><h3 style="margin-bottom:.5rem">What it does</h3><ul>${p.feats.map(f=>`<li>${esc(f)}</li>`).join('')}</ul></div>`:''}${p.stack.length?`<div class="stack">${p.stack.map(s=>`<span>${esc(s)}</span>`).join('')}</div>`:''}<div class="row"><a class="btn" href="${esc(p.link)}" ${ext?'target="_blank" rel="noopener"':''}>View live site</a><button class="btn ghost" id="dc">Close</button></div></div>`;
   const d=$('#dlg');d.showModal?d.showModal():d.setAttribute('open','');$('#dx').onclick=$('#dc').onclick=()=>d.close()});
 $('#dlg').addEventListener('click',e=>{if(e.target.id==='dlg')e.target.close()});
 
@@ -470,30 +446,20 @@ const wa=CONFIG.whatsapp,pretty='+'+wa.replace(/^(\d{3})(\d{3})(\d{3})(\d{4})$/,
 $('#waText').textContent=pretty;$('#waText').href='https://wa.me/'+wa;
 if(CONFIG.email){$('#mailRow').hidden=false;$('#mailText').textContent=CONFIG.email;$('#mailText').href='mailto:'+CONFIG.email;$('#factEmail').hidden=false;$('#factEmailV').textContent=CONFIG.email}
 if(CONFIG.cv){const a=$('#cv');a.hidden=false;a.href=CONFIG.cv;a.setAttribute('download','')}
-const LINKS=[['LinkedIn',CONFIG.linkedin],['GitHub',CONFIG.github],['Instagram',CONFIG.instagram],['Facebook',CONFIG.facebook]].filter(x=>x[1]);
-const anchor=x=>`<a href="${esc(x[1])}"${/^mailto:/.test(x[1])?'':' target="_blank" rel="noopener"'}>${x[0]}</a>`;
-$('#social').innerHTML=[['WhatsApp','https://wa.me/'+wa],...LINKS].map(anchor).join('');
-$('#heroLinks').innerHTML=[...(CONFIG.email?[['Email','mailto:'+CONFIG.email]]:[]),...LINKS.filter(x=>/LinkedIn|GitHub/.test(x[0]))].map(anchor).join('');
-function readForm(){
+$('#social').innerHTML=[['WhatsApp','https://wa.me/'+wa],['Instagram',CONFIG.instagram],['Facebook',CONFIG.facebook],['X',CONFIG.x]].filter(s=>s[1]).map(s=>`<a href="${esc(s[1])}" target="_blank" rel="noopener">${s[0]}</a>`).join('');
+$('#form').addEventListener('submit',e=>{
+  e.preventDefault();
   const n=$('#fName').value.trim(),em=$('#fEmail').value.trim(),sub=$('#fSub').value.trim(),m=$('#fMsg').value.trim();
   $('#eName').textContent=n.length>=2?'':'Enter your name.';
   $('#eEmail').textContent=!em||/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)?'':'Enter a valid email address.';
   $('#eMsg').textContent=m.length>=10?'':'Write a message of at least 10 characters.';
-  if($('#eName').textContent||$('#eEmail').textContent||$('#eMsg').textContent)return null;
-  return {sub,text:`Hi Kamaldeen, I'm ${n}${em?' ('+em+')':''}.${sub?'\nSubject: '+sub:''}\n\n${m}`};
-}
-$('#form').addEventListener('submit',e=>{e.preventDefault();const d=readForm();if(!d)return;
-  window.open('https://wa.me/'+wa+'?text='+encodeURIComponent(d.text),'_blank','noopener');toast('Opening WhatsApp…')});
-if(CONFIG.email){const b=$('#mailBtn');b.hidden=false;b.onclick=()=>{const d=readForm();if(!d)return;
-  location.href='mailto:'+CONFIG.email+'?subject='+encodeURIComponent(d.sub||'Enquiry from your portfolio')+'&body='+encodeURIComponent(d.text)}}
+  if($('#eName').textContent||$('#eEmail').textContent||$('#eMsg').textContent)return;
+  const text=`Hi Kamaldeen, I'm ${n}${em?' ('+em+')':''}.${sub?'\nSubject: '+sub:''}\n\n${m}`;
+  window.open('https://wa.me/'+wa+'?text='+encodeURIComponent(text),'_blank','noopener');
+  toast('Opening WhatsApp…');
+});
 
 renderSkills();renderProjects();
-
-/* scroll reveal (skipped for reduced motion) */
-const REDUCE=matchMedia('(prefers-reduced-motion:reduce)').matches;
-const rvObs='IntersectionObserver' in window?new IntersectionObserver((es,o)=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');o.unobserve(e.target)}}),{threshold:.1}):null;
-function reveal(){if(REDUCE||!rvObs)return;$$('section .head,.card,.proj,.steps,.quote,.facts,.tabs,.chips,.cbox,#form,details,.soon').forEach(e=>{if(!e.dataset.r){e.dataset.r='1';e.classList.add('rv');rvObs.observe(e)}})}
-reveal();new MutationObserver(reveal).observe($('#pgrid'),{childList:true});
 </script>
 </body>
 </html>
