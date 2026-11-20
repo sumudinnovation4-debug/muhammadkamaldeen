@@ -7,25 +7,25 @@
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://muhammadkamaldeen.vercel.app/about</loc>
+    <loc>https://muhammadkamaldeen.vercel.app/gym.html</loc>
     <lastmod>2026-11-20</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://muhammadkamaldeen.vercel.app/services</loc>
+    <loc>https://muhammadkamaldeen.vercel.app/restaurant.html</loc>
     <lastmod>2026-11-20</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://muhammadkamaldeen.vercel.app/projects</loc>
+    <loc>https://muhammadkamaldeen.vercel.app/salon.html</loc>
     <lastmod>2026-11-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://muhammadkamaldeen.vercel.app/contact</loc>
+    <loc>https://muhammadkamaldeen.vercel.app/travel.html</loc>
     <lastmod>2026-11-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
